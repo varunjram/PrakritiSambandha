@@ -5,6 +5,7 @@ import Landing from "../pages/Landing";
 import MockAPI from "./MockApi";
 import Signup from "../pages/Signup";
 import NotFound from "./NotFound";
+import Home from "../pages/Home";
 
 function Routing() {
   return (
@@ -24,6 +25,10 @@ function Routing() {
       <Route
         path="/mockman"
         element={<MockAPI />}
+      />
+      <Route
+        path="/home"
+        element={<Home />}
       />
       <Route
         path="/*"
