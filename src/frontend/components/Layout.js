@@ -1,5 +1,6 @@
 import React from "react";
 import LeftSideContent from "./LeftSideContent";
+import RightSideContent from "./RightSideContent";
 
 function Layout({ children }) {
   return (
@@ -9,8 +10,8 @@ function Layout({ children }) {
       </div>
       <main className="flex surface-100">
         <LeftSideContent />
-        <div className="flex-grow-1 border-1 p-5">{children}</div>
-        <aside className="flex-grow-1 border-1">sidebar right</aside>
+        <div className="flex-grow-1 border-1 p-5 w-6">{children}</div>
+        <RightSideContent />
       </main>
     </div>
   );
