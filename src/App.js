@@ -3,7 +3,7 @@ import Routing from "./frontend/components/Routing";
 import logo from "./logo.svg";
 import "primereact/resources/primereact.min.css";
 import "/node_modules/primeflex/primeflex.css";
-import {} from "primereact/resources/themes/saga-green/theme.css";
+import "primereact/resources/themes/saga-green/theme.css";
 import "primeicons/primeicons.css";
 
 // import {} from "primereact/resources/themes/vela-green/theme.css";

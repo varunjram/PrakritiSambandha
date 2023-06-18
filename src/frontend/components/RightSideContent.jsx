@@ -29,7 +29,7 @@ function RightSideContent() {
     },
   ];
   return (
-    <aside className="w-3 border-1 flex flex-column align-items-center  ">
+    <aside className="w-3 border-1 flex flex-column align-items-center pt-5  ">
       <span className="p-input-icon-left ">
         <i className="pi pi-search" />
         <InputText placeholder="Search" />
