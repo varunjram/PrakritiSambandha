@@ -9,13 +9,14 @@ import Home from "../pages/Home";
 import Explore from "../pages/Explore";
 import Bookmarks from "../pages/Bookmarks";
 import Profile from "../pages/Profile";
+import AuthWrapper from "./AuthWrapper";
 
 function Routing() {
   return (
     <Routes>
       <Route
         path="/"
-        element={<Home />}
+        element={<AuthWrapper children={<Home />} />}
       />
       <Route
         path="/login"

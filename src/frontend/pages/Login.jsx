@@ -2,31 +2,20 @@ import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { handleLogIn } from "../services";
+import { useAuthentication } from "../context/AuthContext";
+import { USER_LOGGED_IN } from "../reducers/AuthReducer";
 
 function Login() {
+  const { isLoggedIn, dispatch } = useAuthentication();
   const [form, setForm] = useState({ username: "", password: "" });
+  const Location = useLocation();
+  const Navigate = useNavigate();
 
   const setFormField = (e, field) => setForm({ ...form, [field]: e.target.value });
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      const { data, status } = await axios.post("/api/auth/login", form, {
-        headers: { "Content-Type": "application/json" },
-      });
 
-      alert("success");
-      if (status === 200) {
-        console.log("data: ", data);
-        localStorage.setItem("socialToken", JSON.stringify(data?.encodedToken));
-        localStorage.setItem("socialUser", JSON.stringify(data?.foundUser));
-      }
-    } catch (error) {
-      console.log("error: ", error);
-      alert("error");
-    }
-  };
+  const updateUserLogIn = (payload) => dispatch({ type: USER_LOGGED_IN, payload: payload });
 
   return (
     <div className="grid h-screen">
@@ -47,7 +36,13 @@ function Login() {
           />
           <h2 className="text-left mb-0"> Welcome to Prakritisambandha</h2>
           <p className="text-left mt-0 text-gray-500">Please go ahead and login below.</p>
-          <form onSubmit={submitHandler}>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const response = await handleLogIn(form, updateUserLogIn);
+              response === 200 ? Navigate(Location?.state?.from) : alert("error");
+              // submitHandler(e);
+            }}>
             <label
               htmlFor="username"
               className="block text-900  mb-2 text-left">
@@ -57,7 +52,7 @@ function Login() {
               value={form.email}
               id="username"
               type="text"
-              onChange={(e) => setFormField(e, "email")}
+              onChange={(e) => setFormField(e, "username")}
               placeholder="Username"
               className="w-full mb-3"
               required
