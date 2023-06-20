@@ -40,8 +40,10 @@ function RightSideContent() {
           <p className="mb-1">Who to Follow?</p>
           <p className="mb-1">Show More</p>
         </div>
-        {[1, 2, 3, 4, 5].map((user) => (
-          <div className="flex  bottom-0 m-1 align-items-center">
+        {[1, 2, 3, 4, 5].map((user, index) => (
+          <div
+            className="flex  bottom-0 m-1 align-items-center"
+            key={`${index}${user}`}>
             <Avatar
               image="https://source.boringavatars.com/beam"
               size="small"

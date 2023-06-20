@@ -33,6 +33,7 @@ function LeftSideContent() {
         <div className="flex flex-column ml-auto min-w-min">
           {sideMenu.map(({ icon, name, path }) => (
             <Link
+              key={`${name}-${icon}`}
               className="ml-7 mb-3 cursor-pointer"
               to={path}>
               <i className={`bi bi-${icon} mr-3`}></i>

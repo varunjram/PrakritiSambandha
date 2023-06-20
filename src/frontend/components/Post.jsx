@@ -51,8 +51,9 @@ function Post() {
           in atque?
         </div>
         <div className="flex justify-content-between mt-2 ">
-          {postButtons.map(({ icon, command }) => (
+          {postButtons.map(({ icon, command }, index) => (
             <Button
+              key={`${index}-${icon}`}
               icon={`bi bi-${icon}`}
               rounded
               text

@@ -16,3 +16,14 @@ export const handleLogIn = async (form, updateUserLogIn) => {
     console.error("handleLogIn", error);
   }
 };
+
+export const getAllUsers = async (getUsers) => {
+  try {
+    const { data, status } = await axios("/api/users");
+    if (status === 200) {
+      getUsers(data?.users);
+    }
+  } catch (error) {
+    console.error("error: while getting all users ", error);
+  }
+};

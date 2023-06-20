@@ -2,8 +2,11 @@ import React from "react";
 import Layout from "../components/Layout";
 import CreatePost from "../components/CreatePost";
 import Post from "../components/Post";
+import { useAppContext } from "../context/AppContext";
 
 function HomeContents() {
+  const { users } = useAppContext();
+  console.log("users: ", users);
   return (
     <div>
       <CreatePost />

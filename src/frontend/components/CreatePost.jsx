@@ -46,8 +46,9 @@ function CreatePost() {
         />
         <div className="flex justify-content-between ">
           <div>
-            {uploadButtons.map(({ icon, command }) => (
+            {uploadButtons.map(({ icon, command }, index) => (
               <Button
+                key={`${index}-${icon}`}
                 icon={`bi bi-${icon}`}
                 rounded
                 text
