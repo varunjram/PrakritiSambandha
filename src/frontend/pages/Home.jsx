@@ -6,12 +6,11 @@ import { useAppContext } from "../context/AppContext";
 
 function HomeContents() {
   const { posts } = useAppContext();
-  console.log("post: ", posts);
   return (
     <div>
       <CreatePost />
       <h3>Latest Posts</h3>
-      {posts.map((post, i) => (
+      {posts?.map((post, i) => (
         <Post
           key={`${post?._id}`}
           post={post}
