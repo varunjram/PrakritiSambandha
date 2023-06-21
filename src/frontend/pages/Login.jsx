@@ -16,7 +16,7 @@ function Login() {
   const setFormField = (e, field) => setForm({ ...form, [field]: e.target.value });
 
   const updateUserLogIn = (payload) => dispatch({ type: USER_LOGGED_IN, payload: payload });
-
+  isLoggedIn && Navigate("/");
   return (
     <div className="grid h-screen">
       <section className="col-6 p-0">

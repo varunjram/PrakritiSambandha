@@ -1,8 +1,18 @@
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import React from "react";
+import { useAppContext } from "../context/AppContext";
 
-function Post() {
+function Post({ post }) {
+  const { users } = useAppContext();
+
+  const findUser = (username) => {
+    const { firstName, lastName } = users?.find((user) => user?.username === username) || {};
+    return `${firstName} ${lastName}`;
+  };
+  const { content, username } = post;
+
+  console.log("postcard: ", post);
   const postButtons = [
     {
       icon: "heart",
@@ -41,15 +51,10 @@ function Post() {
       </div>
       <div className="flex-grow-1 p-3 ">
         <div className="flex align-items-center ">
-          <h4 className="mr-2">Prakriti</h4>{" "}
-          <span className="text-500">@prakritisambandha &#8729; 1 min</span>
+          <h4 className="mr-2">{findUser(username)}</h4>
+          <span className="text-500">@{username} &#8729; 1 min</span>
         </div>
-        <div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus quidem aspernatur deleniti
-          quaerat minima fugit. atque in unde obcaecati, ipsum iste autem dolorum, dignissimos
-          tempora. Dolorum sunt similique facilis, ab atque amet. Excepturi quisquam nam adipisci id
-          in atque?
-        </div>
+        <div>{content}</div>
         <div className="flex justify-content-between mt-2 ">
           {postButtons.map(({ icon, command }, index) => (
             <Button

@@ -21,9 +21,20 @@ export const getAllUsers = async (getUsers) => {
   try {
     const { data, status } = await axios("/api/users");
     if (status === 200) {
-      getUsers(data?.users);
+      getUsers("users", data?.users);
     }
   } catch (error) {
     console.error("error: while getting all users ", error);
+  }
+};
+export const getAllPosts = async (getPosts) => {
+  try {
+    const { data, status } = await axios("/api/posts");
+    console.log("data: ", data);
+    if (status === 200) {
+      getPosts("posts", data?.posts);
+    }
+  } catch (error) {
+    console.error("error: while getting all posts ", error);
   }
 };

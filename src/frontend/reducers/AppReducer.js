@@ -6,6 +6,8 @@ const AppReducer = (state, { type, payload }) => {
   switch (type) {
     case "GET_USERS":
       return { ...state, users: payload };
+    case "UPDATE_APP_STATE":
+      return { ...state, [payload?.key]: payload.value };
 
     default:
       throw new Error("Not a reducer function");
@@ -13,7 +15,8 @@ const AppReducer = (state, { type, payload }) => {
 };
 
 const GET_USERS = "GET_USERS";
+const UPDATE_APP_STATE = "UPDATE_APP_STATE";
 
-export { appInitialState, GET_USERS };
+export { appInitialState, UPDATE_APP_STATE };
 
 export default AppReducer;

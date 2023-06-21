@@ -5,17 +5,18 @@ import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
 
 function HomeContents() {
-  const { users } = useAppContext();
-  console.log("users: ", users);
+  const { posts } = useAppContext();
+  console.log("post: ", posts);
   return (
     <div>
       <CreatePost />
       <h3>Latest Posts</h3>
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {posts.map((post, i) => (
+        <Post
+          key={`${post?._id}`}
+          post={post}
+        />
+      ))}
     </div>
   );
 }

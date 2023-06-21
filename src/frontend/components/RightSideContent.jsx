@@ -4,8 +4,11 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import { InputText } from "primereact/inputtext";
+import { useAppContext } from "../context/AppContext";
 
 function RightSideContent() {
+  const { users } = useAppContext();
+  console.log("users: ", users);
   const sideMenu = [
     {
       icon: "house",
@@ -40,24 +43,27 @@ function RightSideContent() {
           <p className="mb-1">Who to Follow?</p>
           <p className="mb-1">Show More</p>
         </div>
-        {[1, 2, 3, 4, 5].map((user, index) => (
-          <div
-            className="flex  bottom-0 m-1 align-items-center"
-            key={`${index}${user}`}>
-            <Avatar
-              image="https://source.boringavatars.com/beam"
-              size="small"
-              shape="circle"
-              className="ml-auto mr-2 "
-            />
-            <div className="flex-grow-1 ">
-              <h3 className="m-0">Prakriti</h3>
-              <p className="text-500 m-0">@prakritisambandha</p>
-            </div>
+        {users.map((user, index) => {
+          const { lastName, firstName, username } = user;
+          return (
+            <div
+              className="flex  bottom-0 m-1 align-items-center"
+              key={`${index}${user}`}>
+              <Avatar
+                image="https://source.boringavatars.com/beam"
+                size="small"
+                shape="circle"
+                className="ml-auto mr-2 "
+              />
+              <div className="flex-grow-1 ">
+                <h3 className="m-0">{`${firstName} ${lastName}`}</h3>
+                <p className="text-500 m-0">@{username}</p>
+              </div>
 
-            <p className="text-red-700">Follow +</p>
-          </div>
-        ))}
+              <p className="text-red-700">Follow +</p>
+            </div>
+          );
+        })}
         ,
       </article>
     </aside>
