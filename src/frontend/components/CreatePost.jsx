@@ -2,29 +2,36 @@ import React, { useState } from "react";
 import { Avatar } from "primereact/avatar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
+import { addPost } from "../services";
+import { useAppContext } from "../context/AppContext";
+import { UPDATE_APP_STATE } from "../reducers/AppReducer";
 
+const uploadButtons = [
+  {
+    icon: "image",
+    command: () => {
+      alert("a");
+    },
+  },
+  {
+    icon: "filetype-gif",
+    command: () => {
+      alert("b");
+    },
+  },
+  {
+    icon: "emoji-wink",
+    command: () => {
+      alert("c");
+    },
+  },
+];
 function CreatePost() {
   const [value, setValue] = useState("");
-  const uploadButtons = [
-    {
-      icon: "image",
-      command: () => {
-        alert("a");
-      },
-    },
-    {
-      icon: "filetype-gif",
-      command: () => {
-        alert("b");
-      },
-    },
-    {
-      icon: "emoji-wink",
-      command: () => {
-        alert("c");
-      },
-    },
-  ];
+  const { dispatch } = useAppContext();
+
+  const updateAppState = (key, value) =>
+    dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
 
   return (
     <section className="flex surface-0">
@@ -59,8 +66,11 @@ function CreatePost() {
           </div>
           <Button
             label="Post"
-            onClick={() => {
-              alert("posted");
+            onClick={async () => {
+              const response = await addPost(updateAppState, value);
+              if (response === 201) {
+                setValue("");
+              }
             }}
           />
         </div>

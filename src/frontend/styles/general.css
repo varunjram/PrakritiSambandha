@@ -2,3 +2,7 @@ a {
   all: unset;
   cursor: pointer;
 }
+
+.white-space-pre-wrap {
+  white-space: pre-line;
+}

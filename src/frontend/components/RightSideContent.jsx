@@ -5,34 +5,21 @@ import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import { InputText } from "primereact/inputtext";
 import { useAppContext } from "../context/AppContext";
-import { LATEST_POSTS } from "../reducers/AppReducer";
+import { UPDATE_SORTBY_METHOD } from "../reducers/AppReducer";
 
 function RightSideContent() {
-  const { users, dispatch } = useAppContext();
+  const { users, dispatch, sortBy } = useAppContext();
   console.log("users: ", users);
-  const sideMenu = [
-    {
-      icon: "house",
-      name: "Home",
-      path: "/home",
-    },
-    {
-      icon: "rocket",
-      name: "Explore",
-      path: "/explore",
-    },
-    {
-      icon: "bookmark",
-      name: "Bookmark",
-      path: "/bookmark",
-    },
-    {
-      icon: "person",
-      name: "Profile",
-      path: "/profile",
-    },
-  ];
+ 
 
+  const isCurrentSortBy = (sortBy, button) => {
+    return sortBy === button ? true : false;
+  };
+
+  const sortByMenus = [
+    { label: "Latest", method: "LATEST", icon: "calendar-event-fill" },
+    { label: "Trending", method: "TRENDING", icon: "fire" },
+  ];
   return (
     <aside className="w-3 border-1 flex flex-column align-items-center pt-5  ">
       <span className="p-input-icon-left ">
@@ -40,18 +27,16 @@ function RightSideContent() {
         <InputText placeholder="Search" />
       </span>
       <div className="mt-2">
-        <Button
-          label="Latest"
-          icon="bi bi-calendar-event-fill"
-          className="mr-2"
-          onClick={() => dispatch({ type: LATEST_POSTS })}
-        />
-        <Button
-          label="Trending"
-          icon="bi bi-fire"
-          className="ml-2"
-          onClick={() => {}}
-        />
+        {sortByMenus.map(({ method, label, icon }) => (
+          <Button
+            label={label}
+            text={isCurrentSortBy(sortBy, method)}
+            raised={isCurrentSortBy(sortBy, method)}
+            icon={`bi bi-${icon}`}
+            className="mr-2"
+            onClick={() => dispatch({ type: UPDATE_SORTBY_METHOD, payload: method })}
+          />
+        ))}
       </div>
 
       <article className="p-3 align-self-stretch">

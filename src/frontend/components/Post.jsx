@@ -3,6 +3,7 @@ import { Button } from "primereact/button";
 import React from "react";
 import { useAppContext } from "../context/AppContext";
 import moment from "moment";
+import { UPDATE_APP_STATE } from "../reducers/AppReducer";
 
 const postButtons = [
   {
@@ -36,7 +37,7 @@ const findUser = (username, users) => {
   return `${firstName} ${lastName}`;
 };
 function Post({ post }) {
-  const { users } = useAppContext();
+  const { users, dispatch } = useAppContext();
   const { content, username, createdAt } = post;
 
   return (
@@ -56,7 +57,7 @@ function Post({ post }) {
             @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
           </span>
         </div>
-        <div>{content}</div>
+        <div className="white-space-pre-wrap">{content}</div>
         <div className="flex justify-content-between mt-2 ">
           {postButtons.map(({ icon, command }, index) => (
             <Button
