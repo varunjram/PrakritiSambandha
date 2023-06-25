@@ -14,15 +14,16 @@ export const getAllPosts = async (addPosts) => {
   }
 };
 
-export const addPost = async (addPosts, value) => {
+export const addPost = async (addPosts, value, authToken) => {
+  alert(authToken);
+  console.log("authToken: ", authToken);
   try {
     const { data, status } = await axios.post(
       "/api/posts",
       { postData: { content: value } },
       {
         headers: {
-          authorization:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIwZjFmYjZiZC1mODkxLTRjNGYtOTQ3Yi1jOThhY2UwYTZhZDUiLCJ1c2VybmFtZSI6ImFkYXJzaGJhbGlrYSJ9.9_jR77l4xJRI7P9ppO6NwK-twRsQNImDsfUcJmBtkwY",
+          authorization: authToken,
         },
       }
     );
@@ -34,5 +35,20 @@ export const addPost = async (addPosts, value) => {
   } catch (error) {
     alert(JSON.stringify(error, null, 2));
     console.error("error: while adding user ", error);
+  }
+};
+
+export const handleLikeAndDislike = async (type, authToken, postId) => {
+  alert("hit")
+  try {
+    const responseData = await axios.post(`/api/posts/like/3`, {}, {
+      headers: {
+        authorization: authToken,
+      },
+    });
+    console.log("response: ", responseData);
+    alert(JSON.stringify(responseData, null, 2));
+  } catch (error) {
+    console.error("error: ", error);
   }
 };
