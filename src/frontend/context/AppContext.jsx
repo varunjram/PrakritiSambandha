@@ -4,7 +4,7 @@ import { getAllPosts, getAllUsers } from "../services";
 const AppContext = createContext();
 const AppContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, appInitialState);
-  console.log("state: ", state);
+
   const context = { ...state, dispatch };
 
   const updateAppState = (key, value) =>

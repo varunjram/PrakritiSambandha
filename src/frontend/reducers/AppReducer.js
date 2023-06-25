@@ -7,7 +7,6 @@ const appInitialState = {
 };
 
 const AppReducer = (state, { type, payload }) => {
-  const { posts } = state;
   switch (type) {
     case "GET_USERS":
       return { ...state, users: payload };

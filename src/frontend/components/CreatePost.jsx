@@ -5,6 +5,7 @@ import { Button } from "primereact/button";
 import { addPost } from "../services";
 import { useAppContext } from "../context/AppContext";
 import { UPDATE_APP_STATE } from "../reducers/AppReducer";
+import { useAuthentication } from "../context/AuthContext";
 
 const uploadButtons = [
   {
@@ -29,6 +30,7 @@ const uploadButtons = [
 function CreatePost() {
   const [value, setValue] = useState("");
   const { dispatch } = useAppContext();
+  const { authToken } = useAuthentication();
 
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
@@ -67,7 +69,7 @@ function CreatePost() {
           <Button
             label="Post"
             onClick={async () => {
-              const response = await addPost(updateAppState, value);
+              const response = await addPost(updateAppState, value, authToken);
               if (response === 201) {
                 setValue("");
               }
