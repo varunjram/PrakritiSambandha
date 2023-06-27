@@ -38,17 +38,22 @@ export const addPost = async (addPosts, value, authToken) => {
   }
 };
 
-export const handleLikeAndDislike = async (type, authToken, postId) => {
-  alert("hit")
+export const handleLikeAndDislike = async (type, authToken, postId, addPosts) => {
+  console.log("authToken123: ", authToken);
   try {
-    const responseData = await axios.post(`/api/posts/like/3`, {}, {
-      headers: {
-        authorization: authToken,
-      },
-    });
-    console.log("response: ", responseData);
-    alert(JSON.stringify(responseData, null, 2));
+    const { data, status } = await axios.post(
+      `/api/posts/${type}/${postId}`,
+      {},
+      {
+        headers: {
+          authorization: authToken,
+        },
+      }
+    );
+    if (status === 201) {
+      addPosts("posts", data?.posts);
+    }
   } catch (error) {
-    console.error("error: ", error);
+    console.error("error:while liking post ", error);
   }
 };

@@ -13,12 +13,18 @@ function AuthReducer(state, { type, payload }) {
     case "USER_LOGGED_OUT":
       localStorage.removeItem("socialToken");
       return { ...state, isLoggedIn: false, user: {} };
+    case "UPDATE_BOOKMARKS":
+      console.log("payload: ", payload);
+      return { ...state, user: { ...state.user, bookmarks: payload } };
     default:
       break;
   }
 }
 
-const USER_LOGGED_IN = "USER_LOGGED_IN",
-  USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export { AuthState, USER_LOGGED_IN, USER_LOGGED_OUT };
+const USER_LOGGED_IN = "USER_LOGGED_IN";
+const USER_LOGGED_OUT = "USER_LOGGED_OUT";
+const UPDATE_BOOKMARKS = "UPDATE_BOOKMARKS";
+
+export { AuthState, USER_LOGGED_IN, USER_LOGGED_OUT, UPDATE_BOOKMARKS };
+
 export default AuthReducer;
