@@ -5,6 +5,7 @@ export const handleLogIn = async (form, updateUserLogIn) => {
     const { data, status } = await axios.post("/api/auth/login", form, {
       headers: { "Content-Type": "application/json" },
     });
+    console.log("logindata: ", data);
 
     if (status === 200) {
       localStorage.setItem("socialToken", JSON.stringify(data?.encodedToken));
