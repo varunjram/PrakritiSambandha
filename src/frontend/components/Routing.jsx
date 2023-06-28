@@ -40,8 +40,9 @@ function Routing() {
         element={<Bookmarks />}
       />
       <Route
-        path="/profile"
+        path="/profile/:userName"
         element={<Profile />}
+        // element={<h1>AWESOME</h1>}
       />
       <Route
         path="/*"

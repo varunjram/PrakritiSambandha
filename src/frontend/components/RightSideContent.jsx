@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
@@ -10,7 +10,7 @@ import { UPDATE_SORTBY_METHOD } from "../reducers/AppReducer";
 function RightSideContent() {
   const { users, dispatch, sortBy } = useAppContext();
   console.log("users: ", users);
- 
+  const Navigate = useNavigate();
 
   const isCurrentSortBy = (sortBy, button) => {
     return sortBy === button ? true : false;
@@ -48,8 +48,11 @@ function RightSideContent() {
           const { lastName, firstName, username } = user;
           return (
             <div
-              className="flex  bottom-0 m-1 align-items-center"
-              key={`${index}${user}`}>
+              className="flex  bottom-0 m-1 align-items-center cursor-pointer"
+              key={`${index}${user}`}
+              onClick={() => {
+                Navigate(`/profile/${username}`);
+              }}>
               <Avatar
                 image="https://source.boringavatars.com/beam"
                 size="small"

@@ -9,7 +9,7 @@ function LeftSideContent() {
     {
       icon: "house",
       name: "Home",
-      path: "/home",
+      path: "/",
     },
     {
       icon: "rocket",

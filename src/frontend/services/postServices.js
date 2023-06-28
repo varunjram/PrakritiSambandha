@@ -93,3 +93,15 @@ export const handlePostDelete = async (authToken, postId, addPosts) => {
     console.error("error:while deleting post ", error);
   }
 };
+
+export const getAllUserPosts = async (username, addUserPosts) => {
+  try {
+    const { data, status } = await axios(`/api/posts/user/${username}`);
+    console.log("getAllUserPosts", { data, status });
+    if (status === 200) {
+      addUserPosts("userPosts", data?.posts);
+    }
+  } catch (error) {
+    console.error("error:getAllUserPosts  ", error);
+  }
+};
