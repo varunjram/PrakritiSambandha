@@ -6,20 +6,43 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
 import { UPDATE_APP_STATE } from "../reducers/AppReducer";
-import { getAllUserPosts } from "../services";
+import { EditUser, getAllUserPosts } from "../services";
 import { postFilterBy } from "../helperFunctions/index.js";
 import { useAuthentication } from "../context/AuthContext";
+import { Dialog } from "primereact/dialog";
+import { RadioButton } from "primereact/radiobutton";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Chips } from "primereact/chips";
+import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
 
 function ProfileContents() {
-  const { sortBy, userPosts, dispatch, users } = useAppContext();
+  const { sortBy, userPosts, dispatch, users, avatarOptions } = useAppContext();
+  const { authToken, dispatch: authDispatch } = useAuthentication();
+
+  const {
+    user: { username: loggedInUser },
+  } = useAuthentication();
   const { userName } = useParams();
-  const [selectedUser, setSelectedUser] = useState(
-    users.find((user) => user?.username === userName)
-  );
+  const [selectedUser, setSelectedUser] = useState();
+  const [editProfile, setEditProfile] = useState(false);
+  const [editForm, setEditForm] = useState({
+    userTags: [],
+    userPortFolio: "",
+    userBio: "",
+  });
+
+  console.log("selectedUser: ", selectedUser);
+
+  const avatarOptionsForm = avatarOptions.map((ele, i) => ({
+    img: ele,
+    name: `Avatar ${i + 1}`,
+    key: `${i + 1}`,
+  }));
+  const [selectedAvatar, setSelectedAvatar] = useState({});
 
   const Navigate = useNavigate();
 
-  console.log("users: ", { users, userName });
   const {
     _id,
     firstName,
@@ -32,9 +55,11 @@ function ProfileContents() {
     following,
     bookmarks,
     id,
+    customInfo,
   } = selectedUser || {};
 
-  !selectedUser && Navigate("/*");
+  const isProfileOfLoggedInUser = loggedInUser === userName;
+  // !selectedUser && Navigate("/*");
   const selfTags = [
     "Senior Software Engineer @Microsoft",
     "Creator of India’s biggest programming community",
@@ -62,29 +87,147 @@ function ProfileContents() {
 
   const UpdateAppState = (key, data) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: data } });
+
+  const UpdateAuthUser = (data) =>
+    authDispatch({ type: UPDATE_AUTH_STATE, payload: { key: "user", value: data } });
+
+  const handleEditFormChange = (event) =>
+    setEditForm((prev) => ({ ...prev, [event.target.id]: event.target.value }));
   useEffect(() => {
     (async () => {
       await getAllUserPosts(userName, UpdateAppState);
     })();
-    console.log("userName: ", userName);
   }, [userName]);
+
+  useEffect(() => {
+    setSelectedUser(users.find((user) => user?.username === userName));
+    setSelectedAvatar(avatarOptionsForm.find((avatarObj) => avatarObj?.img === customInfo?.avatar));
+  }, [users, userName]);
+
+  // const ProfileEditForm = () => {};
 
   return (
     <div className="text-center">
+      <Dialog
+        header="Edit Profile"
+        visible={editProfile}
+        style={{ width: "50vw" }}
+        onHide={() => setEditProfile(false)}
+        // footer={dialogFooterContent}
+      >
+        <div className="relative">
+          {
+            <div className="card flex justify-content-center relative">
+              <div className="flex flex-wrap  grid">
+                {avatarOptionsForm?.map((avatarObj, i) => {
+                  return (
+                    <div className="col-6">
+                      <Avatar
+                        image={avatarObj.img}
+                        // className="w-7rem h-7rem"s
+                        className={`${i % 2 ? "ml-auto" : null} w-4rem h-4rem block`}
+                      />
+                      <div
+                        key={avatarObj.key}
+                        className="flex align-items-center">
+                        <RadioButton
+                          inputId={avatarObj.key}
+                          name="avatarObj"
+                          value={avatarObj}
+                          onChange={(e) => setSelectedAvatar(e.value)}
+                          checked={selectedAvatar?.key === avatarObj?.key}
+                          className={`${i % 2 ? "ml-auto" : null}`}
+                        />
+                        <label
+                          htmlFor={avatarObj.key}
+                          className="ml-2">
+                          {avatarObj.name}
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          }
+          <div
+            style={{ marginLeft: "25%", marginRight: "25%" }}
+            className="absolute top-0 flex flex-column justify-content-center  align-items-center text-center ">
+            <Avatar
+              image={customInfo?.avatar}
+              className="w-7rem h-7rem flex-1"
+            />
+            <p className="w-full flex-1">Selected Avatar</p>
+            <div className="flex flex-column gap-2">
+              <label htmlFor="username">Bio</label>
+              <InputTextarea
+                id="userBio"
+                value={editForm.userBio}
+                className="h-7rem"
+                cols={35}
+                onChange={handleEditFormChange}
+              />
+            </div>
+            <div className="flex flex-column gap-2">
+              <label htmlFor="username">Portfoil URL</label>
+              <InputText
+                value={editForm.userPortFolio}
+                id="userPortFolio"
+                className="w-22rem"
+                onChange={handleEditFormChange}
+              />
+            </div>
+
+            <Button
+              label="Update"
+              onClick={() => {
+                alert("will be edited");
+                const EditData = {
+                  customInfo: {
+                    ...customInfo,
+                    bio: editForm?.userBio,
+                    portfolioUrl: editForm?.userPortFolio,
+                    avatar: selectedAvatar,
+                  },
+                };
+                EditUser(authToken, EditData, UpdateAuthUser);
+              }}
+              className="block absolute bottom-0 right-0"
+            />
+          </div>
+          <pre>{JSON.stringify(selectedUser, null, 2)}</pre>
+        </div>
+      </Dialog>
       <section className="user-details">
         <div className=" flex justify-content-center max-content-max ">
           <Avatar
-            image="https://source.boringavatars.com/beam"
+            image={customInfo?.avatar}
             className="w-7rem h-7rem"
           />
         </div>
-        <h1 className="mt-0">{`${firstName}${lastName}`}</h1>
+        <h1 className="mt-0">{`${firstName} ${lastName}`}</h1>
         <h3 className="text-500">@{username}</h3>
-        <Button
-          label="Edit Profile"
-          outlined
-          className="secondary"
-        />
+        {isProfileOfLoggedInUser ? (
+          <Button
+            label="Edit Profile"
+            outlined
+            className="secondary"
+            onClick={() => {
+              setEditProfile(true);
+
+              setEditForm({
+                userTags: customInfo?.tags,
+                userPortFolio: customInfo?.portfolioUrl,
+                userBio: customInfo?.bio,
+              });
+            }}
+          />
+        ) : (
+          <Button
+            label="Follow"
+            className="secondary"
+          />
+        )}
         <p className="text-500">
           {selfTags
             .map((tag, i) => (i !== selfTags.length - 1 ? ` ${tag} ||` : ` ${tag}`))

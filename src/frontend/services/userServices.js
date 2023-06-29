@@ -31,3 +31,22 @@ export const handleBookMark = async (type, authToken, postId, updateBookmarks) =
     console.log(`error:${type}`, error);
   }
 };
+
+export const EditUser = async (authToken, EditData, UpdateAuthUser) => {
+  try {
+    const { status, data } = await axios.post(
+      "/api/users/edit",
+      {
+        userData: EditData,
+      },
+      {
+        headers: { authorization: authToken },
+      }
+    );
+    if (status === 201) {
+      UpdateAuthUser(data?.user);
+    }
+  } catch (error) {
+    console.error("error: while editing user ", error);
+  }
+};
