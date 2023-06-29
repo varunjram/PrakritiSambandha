@@ -45,7 +45,7 @@ function RightSideContent() {
           <p className="mb-1">Show More</p>
         </div>
         {users.map((user, index) => {
-          const { lastName, firstName, username } = user;
+          const { lastName, firstName, username, customInfo } = user;
           return (
             <div
               className="flex  bottom-0 m-1 align-items-center cursor-pointer"
@@ -54,7 +54,7 @@ function RightSideContent() {
                 Navigate(`/profile/${username}`);
               }}>
               <Avatar
-                image="https://source.boringavatars.com/beam"
+                image={customInfo?.avatar}
                 size="small"
                 shape="circle"
                 className="ml-auto mr-2 "

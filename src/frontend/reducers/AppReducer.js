@@ -64,6 +64,19 @@ const appInitialState = {
   posts: [],
   userPosts: [],
   sortBy: "LATEST",
+  avatarOptions: [
+    "https://source.boringavatars.com/beam/120/Albert%20Einstein?colors=336633,669966,99cc99",
+    "https://source.boringavatars.com/beam/120/Stefan?colors=264653,f4a261,e76f51",
+    "https://source.boringavatars.com/beam/120/Sacagawea?colors=/ffffe5,dffda7,6ecf42",
+    "https://source.boringavatars.com/beam/120/Hedy%20Lamarr?colors=666666,abdb25,999999,ffffff,cccccc",
+    "https://source.boringavatars.com/beam/120/Nellie%20Bly?colors=184848,006060,007878,a8c030,f0f0d8",
+    "https://source.boringavatars.com/beam/120/Mary%20Edwards?colors=a7cd2c,bada5f,cee891,e1f5c4,50c8c6",
+    "https://source.boringavatars.com/beam/120/Felisa%20Rincon?colors=6e9167,ffdd8c,ff8030,cc4e00,700808",
+    "https://source.boringavatars.com/beam/120/Lucy%20Stone?colors=53ac59,3b8952,0f684b,03484c,1c232e",
+    "https://source.boringavatars.com/beam/120/Grace%20Hopper?colors=336699,3399cc,33cccc",
+
+    "https://source.boringavatars.com/beam/120/Albert%20Einstein?colors=00ffff,33ccff,66b2ff",
+  ],
 };
 
 const AppReducer = (state, { type, payload }) => {

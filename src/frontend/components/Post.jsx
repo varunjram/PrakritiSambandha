@@ -17,8 +17,7 @@ import { Dialog } from "primereact/dialog";
 import { InputTextarea } from "primereact/inputtextarea";
 
 const findUser = (username, users) => {
-  const { firstName, lastName } = users?.find((user) => user?.username === username) || {};
-  return `${firstName} ${lastName}`;
+  return users?.find((user) => user?.username === username) || {};
 };
 function Post({ post }) {
   const { users, dispatch } = useAppContext();
@@ -33,12 +32,14 @@ function Post({ post }) {
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
   const [editContent, setEditContent] = useState("content");
+  const postedUser = findUser(username, users);
+  const { lastName, firstName, customInfo } = postedUser;
 
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
   const updateBookmarks = (value) => authDispatch({ type: UPDATE_BOOKMARKS, payload: value });
   const isPostLiked = likedBy?.some((likedUser) => likedUser._id === user._id);
-  const isPostBookmarked = user?.bookmarks.some((bookmarkUser) => bookmarkUser._id === _id);
+  const isPostBookmarked = user?.bookmarks?.some((bookmarkUser) => bookmarkUser._id === _id);
   const isLoggedInUsersPost = user?.username === post?.username;
 
   const postButtons = [
@@ -137,7 +138,7 @@ function Post({ post }) {
       </Dialog>
       <div className="p-3 pr-0">
         <Avatar
-          image="https://source.boringavatars.com/beam"
+          image={customInfo?.avatar}
           size="large"
           shape="circle"
           className="ml-auto "
@@ -145,7 +146,7 @@ function Post({ post }) {
       </div>
       <div className="flex-grow-1 p-3 ">
         <div className="flex align-items-center ">
-          <h4 className="mr-2">{findUser(username, users)}</h4>
+          <h4 className="mr-2">{`${firstName} ${lastName}`}</h4>
           <span className="text-500">
             @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
           </span>

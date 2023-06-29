@@ -30,7 +30,7 @@ const uploadButtons = [
 function CreatePost() {
   const [value, setValue] = useState("");
   const { dispatch } = useAppContext();
-  const { authToken } = useAuthentication();
+  const { authToken, user } = useAuthentication();
 
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
@@ -39,7 +39,7 @@ function CreatePost() {
     <section className="flex surface-0">
       <div className="p-3 pr-0">
         <Avatar
-          image="https://source.boringavatars.com/beam"
+          image={user?.customInfo?.avatar}
           size="large"
           shape="circle"
           className="ml-auto "

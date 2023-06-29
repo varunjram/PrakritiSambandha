@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
+import { useAuthentication } from "../context/AuthContext";
 
 function LeftSideContent() {
+  const { user } = useAuthentication();
+  console.log("user: ", user);
+
+  const { firstName, lastName, customInfo, username } = user;
   const sideMenu = [
     {
       icon: "house",
@@ -48,14 +53,14 @@ function LeftSideContent() {
       </div>
       <article className="flex fixed bottom-0 mb-3 w-3 p-3">
         <Avatar
-          image="https://source.boringavatars.com/beam"
+          image={customInfo?.avatar}
           size="small"
           shape="circle"
           className="ml-auto mr-2 "
         />
         <div className="flex-grow-1 relative">
-          <h3 className="m-0">Prakriti</h3>
-          <p className="text-500 m-0">@prakritisambandha</p>
+          <h3 className="m-0">{`${firstName} ${lastName}`}</h3>
+          <p className="text-500 m-0">@{username}</p>
           <span className="absolute top-0 right-0">...</span>
         </div>
       </article>

@@ -33,16 +33,15 @@ function Routing() {
       /
       <Route
         path="/explore"
-        element={<Explore />}
+        element={<AuthWrapper children={<Explore />} />}
       />
       <Route
         path="/bookmark"
-        element={<Bookmarks />}
+        element={<AuthWrapper children={<Bookmarks />} />}
       />
       <Route
         path="/profile/:userName"
-        element={<Profile />}
-        // element={<h1>AWESOME</h1>}
+        element={<AuthWrapper children={<Profile />} />}
       />
       <Route
         path="/*"
