@@ -17,6 +17,7 @@ function AuthReducer(state, { type, payload }) {
       return { ...state, user: { ...state.user, bookmarks: payload } };
     case "UPDATE_AUTH_STATE":
       console.log("payload: ", payload);
+      
       return { ...state, [payload?.key]: payload?.value };
     default:
       break;

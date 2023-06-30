@@ -5,7 +5,7 @@ import { Button } from "primereact/button";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
-import { UPDATE_APP_STATE } from "../reducers/AppReducer";
+import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
 import { EditUser, getAllUserPosts } from "../services";
 import { postFilterBy } from "../helperFunctions/index.js";
 import { useAuthentication } from "../context/AuthContext";
@@ -15,10 +15,11 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Chips } from "primereact/chips";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
+import { postFollowHandler } from "../services/postServices";
 
 function ProfileContents() {
   const { sortBy, userPosts, dispatch, users, avatarOptions } = useAppContext();
-  const { authToken, dispatch: authDispatch } = useAuthentication();
+  const { authToken, dispatch: authDispatch, user } = useAuthentication();
 
   const {
     user: { username: loggedInUser },
@@ -58,6 +59,8 @@ function ProfileContents() {
     customInfo,
   } = selectedUser || {};
 
+  const isFollowedUser = user?.following?.some((follower) => follower?._id === _id);
+
   const isProfileOfLoggedInUser = loggedInUser === userName;
   // !selectedUser && Navigate("/*");
   const selfTags = [
@@ -87,6 +90,8 @@ function ProfileContents() {
 
   const UpdateAppState = (key, data) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: data } });
+
+  const UpdateAppUsers = (data) => dispatch({ type: UPDATE_FOLLOW_USER, payload: data });
 
   const UpdateAuthUser = (data) =>
     authDispatch({ type: UPDATE_AUTH_STATE, payload: { key: "user", value: data } });
@@ -224,8 +229,18 @@ function ProfileContents() {
           />
         ) : (
           <Button
-            label="Follow"
+            label={isFollowedUser ? "Un-follow" : "Follow"}
             className="secondary"
+            onClick={async () => {
+              const type = isFollowedUser ? "unfollow" : "follow";
+              await postFollowHandler(
+                type,
+                authToken,
+                selectedUser?._id,
+                UpdateAuthUser,
+                UpdateAppUsers
+              );
+            }}
           />
         )}
         <p className="text-500">

@@ -52,7 +52,7 @@ export const handleLikeAndDislike = async (type, authToken, postId, addPosts) =>
       addPosts("posts", data?.posts);
     }
   } catch (error) {
-    console.error("error:while liking post ", error);
+    console.error(`error:while ${type} post `, error);
   }
 };
 
@@ -103,5 +103,34 @@ export const getAllUserPosts = async (username, addUserPosts) => {
     }
   } catch (error) {
     console.error("error:getAllUserPosts  ", error);
+  }
+};
+
+export const postFollowHandler = async (
+  type,
+  authToken,
+  followUserId,
+  UpdateAuthUser,
+  UpdateAppUsers
+) => {
+  console.log("authToken123: ", authToken);
+  try {
+    const { data, status } = await axios.post(
+      `/api/users/${type}/${followUserId}`,
+      {},
+      {
+        headers: {
+          authorization: authToken,
+        },
+      }
+    );
+    console.log("postFollowHandler: ", data);
+    console.log("postFollowHandler: ", status);
+    if (status === 200) {
+      UpdateAuthUser(data?.user);
+      UpdateAppUsers([data?.followUser, data?.user]);
+    }
+  } catch (error) {
+    console.error(`error:while ${type} post `, error);
   }
 };

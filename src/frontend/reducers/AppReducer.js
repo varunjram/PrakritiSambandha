@@ -83,6 +83,12 @@ const AppReducer = (state, { type, payload }) => {
   switch (type) {
     case "GET_USERS":
       return { ...state, users: payload };
+    case "UPDATE_FOLLOW_USER":
+      const getUserIds = payload.map((user) => user?._id);
+      const filterFollowedUser = state?.users.filter((user) => !getUserIds.includes(user?._id));
+      console.log("filterFollowedUser: ", filterFollowedUser);
+      console.log("filterFollowedUser ", [...filterFollowedUser, ...payload]);
+      return { ...state, users: [...filterFollowedUser, ...payload] };
     case "UPDATE_APP_STATE":
       return { ...state, [payload?.key]: payload.value };
     case "UPDATE_SORTBY_METHOD":
@@ -100,7 +106,8 @@ const AppReducer = (state, { type, payload }) => {
 // const LATEST_POSTS = "LATEST_POSTS";
 const UPDATE_APP_STATE = "UPDATE_APP_STATE";
 const UPDATE_SORTBY_METHOD = "UPDATE_SORTBY_METHOD";
+const UPDATE_FOLLOW_USER = "UPDATE_FOLLOW_USER";
 
-export { appInitialState, UPDATE_APP_STATE, UPDATE_SORTBY_METHOD };
+export { appInitialState, UPDATE_APP_STATE, UPDATE_SORTBY_METHOD, UPDATE_FOLLOW_USER };
 
 export default AppReducer;
