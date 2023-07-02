@@ -119,7 +119,7 @@ function Post({ post }) {
   );
 
   return (
-    <section className="flex surface-0 mb-4 relative">
+    <section className="flex surface-0 mb-4 relative text-left">
       {/* <pre>{JSON.stringify(authToken, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Dialog

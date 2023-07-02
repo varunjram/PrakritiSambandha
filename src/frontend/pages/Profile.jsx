@@ -33,8 +33,6 @@ function ProfileContents() {
     userBio: "",
   });
 
-  console.log("selectedUser: ", selectedUser);
-
   const avatarOptionsForm = avatarOptions.map((ele, i) => ({
     img: ele,
     name: `Avatar ${i + 1}`,
@@ -63,13 +61,6 @@ function ProfileContents() {
 
   const isProfileOfLoggedInUser = loggedInUser === userName;
   // !selectedUser && Navigate("/*");
-  const selfTags = [
-    "Senior Software Engineer @Microsoft",
-    "Creator of India’s biggest programming community",
-    " Tweets about JavaScript",
-    "ReactJS",
-    "Career and Startups",
-  ];
 
   const userStats = [
     {
@@ -244,15 +235,15 @@ function ProfileContents() {
           />
         )}
         <p className="text-500">
-          {selfTags
-            .map((tag, i) => (i !== selfTags.length - 1 ? ` ${tag} ||` : ` ${tag}`))
+          {customInfo?.tags
+            .map((tag, i) => (i !== customInfo?.tags.length - 1 ? ` ${tag} ||` : ` ${tag}`))
             .join("")}
         </p>
         <Link
           className="text-red-500"
           to={"https://www.factretriever.com/"}
           target="_blank">
-          userWebsite.com
+          {customInfo?.portfolioUrl}
         </Link>
         <div className="flex justify-content-center mb-3">
           {userStats.map(({ stat, value }) => (
