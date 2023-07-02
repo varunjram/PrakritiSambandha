@@ -14,12 +14,12 @@ export const getAllPosts = async (addPosts) => {
   }
 };
 
-export const addPost = async (addPosts, value, authToken) => {
+export const addPost = async (addPosts, postContent, authToken) => {
   console.log("authToken: ", authToken);
   try {
     const { data, status } = await axios.post(
       "/api/posts",
-      { postData: { content: value } },
+      { postData: { content: postContent?.value, images: postContent?.files } },
       {
         headers: {
           authorization: authToken,

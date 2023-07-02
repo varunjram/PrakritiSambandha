@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from "react";
 import AppReducer, { UPDATE_APP_STATE, appInitialState } from "../reducers/AppReducer";
 import { getAllPosts, getAllUsers } from "../services";
+import { deleteLocalStorageItemsStartsWith } from "../helperFunctions";
 const AppContext = createContext();
 const AppContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, appInitialState);
@@ -13,6 +14,10 @@ const AppContextProvider = ({ children }) => {
   useEffect(() => {
     getAllUsers(updateAppState);
     getAllPosts(updateAppState);
+
+    return () => {
+      deleteLocalStorageItemsStartsWith("social");
+    };
   }, []);
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
