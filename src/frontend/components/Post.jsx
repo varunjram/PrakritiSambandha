@@ -27,7 +27,7 @@ function Post({ post }) {
     content,
     username,
     createdAt,
-    likes: { likedBy = null },
+    likes: { likeCount, likedBy = null },
   } = post || {};
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
@@ -161,6 +161,8 @@ function Post({ post }) {
               text
               aria-label="Filter"
               onClick={command}
+              badge={icon === "heart-fill" && likeCount && likeCount}
+              badgeClassName="absolute top-0 right-0 "
             />
           ))}
         </div>

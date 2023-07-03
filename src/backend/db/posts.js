@@ -13,7 +13,7 @@ export const posts = [
 
       All soils are a mixture of mineral particles — primarily clay, sand, and silt. Often they will contain higher amounts of one type of particle relative to the others. That doesn’t make them bad growing mediums, but it will affect their density, drainage rate, and capacity to hold nutrients.`,
     likes: {
-      likeCount: 0,
+      likeCount: 3,
       likedBy: [],
       dislikedBy: [],
     },
@@ -25,12 +25,24 @@ export const posts = [
     _id: "201",
     content: `Pruning and Training: Regularly prune and train your plants to maintain their shape, improve airflow, and encourage better fruiting or flowering. Pruning also helps remove dead or diseased branches, stimulates new growth, and keeps plants healthy and vigorous..`,
     likes: {
-      likeCount: 0,
+      likeCount: 2,
       likedBy: [],
       dislikedBy: [],
     },
     username: "adarshbalika",
     createdAt: "Wed Jun 10 2023 07:31:53 GMT+0530 (India Standard Time)",
+    updatedAt: formatDate(),
+  },
+  {
+    _id: "202",
+    content: `Planting for Pollinators: Create a pollinator-friendly garden by including a variety of flowers, herbs, and shrubs that attract bees, butterflies, and other beneficial insects. Pollinators play a crucial role in plant reproduction and ecosystem health, so providing them with a diverse and pesticide-free habitat is essential.`,
+    likes: {
+      likeCount: 1,
+      likedBy: [],
+      dislikedBy: [],
+    },
+    username: "adarshbalika",
+    createdAt: "Wed Jun 19 2023 03:31:53 GMT+0530 (India Standard Time)",
     updatedAt: formatDate(),
   },
   {
