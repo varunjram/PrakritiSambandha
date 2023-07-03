@@ -41,7 +41,6 @@ function Login() {
               e.preventDefault();
               const response = await handleLogIn(form, updateUserLogIn);
               response === 200 ? Navigate(Location?.state?.from) : alert("error");
-              // submitHandler(e);
             }}>
             <label
               htmlFor="username"

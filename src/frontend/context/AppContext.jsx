@@ -12,8 +12,10 @@ const AppContextProvider = ({ children }) => {
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
 
   useEffect(() => {
+    const _token = localStorage.getItem("socialToken");
     getAllUsers(updateAppState);
     getAllPosts(updateAppState);
+    dispatch({ type: UPDATE_APP_STATE, payload: { key: "authToken", value: _token } });
 
     return () => {
       deleteLocalStorageItemsStartsWith("social");

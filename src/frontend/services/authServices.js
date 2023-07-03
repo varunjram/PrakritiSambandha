@@ -10,7 +10,7 @@ export const handleLogIn = async (form, updateUserLogIn) => {
     if (status === 200) {
       localStorage.setItem("socialToken", JSON.stringify(data?.encodedToken));
       localStorage.setItem("socialUser", JSON.stringify(data?.foundUser));
-      updateUserLogIn(data?.foundUser);
+      updateUserLogIn({ user: data?.foundUser, token: data?.encodedToken });
       return status;
     }
   } catch (error) {

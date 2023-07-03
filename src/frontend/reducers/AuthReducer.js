@@ -1,5 +1,3 @@
-import React from "react";
-
 const AuthState = {
   user: {},
   isLoggedIn: false,
@@ -9,7 +7,8 @@ const AuthState = {
 function AuthReducer(state, { type, payload }) {
   switch (type) {
     case "USER_LOGGED_IN":
-      return { ...state, isLoggedIn: true, user: payload };
+      console.log("payload: ", payload);
+      return { ...state, isLoggedIn: true, user: payload?.user, authToken: payload?.token };
     case "USER_LOGGED_OUT":
       localStorage.removeItem("socialToken");
       return { ...state, isLoggedIn: false, user: {} };
@@ -17,7 +16,7 @@ function AuthReducer(state, { type, payload }) {
       return { ...state, user: { ...state.user, bookmarks: payload } };
     case "UPDATE_AUTH_STATE":
       console.log("payload: ", payload);
-      
+
       return { ...state, [payload?.key]: payload?.value };
     default:
       break;
