@@ -3,16 +3,14 @@ import Layout from "../components/Layout";
 import CreatePost from "../components/CreatePost";
 import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
+import { postFilterBy } from "../helperFunctions";
+import { useAuthentication } from "../context/AuthContext";
 
 function HomeContents() {
+  const { user } = useAuthentication();
   const { posts, sortBy } = useAppContext();
 
-  const postFilterBy = (sortBy) => {
-    if (sortBy === "LATEST")
-      return posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  };
-
-  const postToDisplay = postFilterBy(sortBy);
+  const postToDisplay = postFilterBy(sortBy, posts, user?.username);
 
   return (
     <div>
