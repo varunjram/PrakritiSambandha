@@ -22,12 +22,13 @@ const findUser = (username, users) => {
 function Post({ post }) {
   const { users, dispatch } = useAppContext();
   const { authToken, user, dispatch: authDispatch } = useAuthentication();
+  console.log("post: ", post);
   const {
     _id,
     content,
     username,
     createdAt,
-    likes: { likeCount, likedBy = null },
+    likes: { likeCount = 0, likedBy = null },
   } = post || {};
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
@@ -39,12 +40,13 @@ function Post({ post }) {
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
   const updateBookmarks = (value) => authDispatch({ type: UPDATE_BOOKMARKS, payload: value });
   const isPostLiked = likedBy?.some((likedUser) => likedUser._id === user._id);
+
   const isPostBookmarked = user?.bookmarks?.some((bookmarkUser) => bookmarkUser._id === _id);
   const isLoggedInUsersPost = user?.username === post?.username;
 
   const postButtons = [
     {
-      icon: isPostLiked ? "heart-fill" : "heart",
+      icon: likeCount ? "heart-fill" : "heart",
       command: () => {
         const type = isPostLiked ? "dislike" : "like";
         handleLikeAndDislike(type, authToken, _id, updateAppState);
@@ -120,7 +122,7 @@ function Post({ post }) {
 
   return (
     <section className="flex surface-0 mb-4 relative text-left">
-      {/* <pre>{JSON.stringify(authToken, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(isPostLiked, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Dialog
         header="Edit Post"
@@ -151,7 +153,7 @@ function Post({ post }) {
             @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
           </span>
         </div>
-        <div className="white-space-pre-wrap">{content}</div>
+        <div className="white-space-pre-wrap ">{content}</div>
         <div className="flex justify-content-between mt-2 ">
           {postButtons.map(({ icon, command, activeIcon }, index) => (
             <Button

@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../components/Layout";
 import { Button } from "primereact/button";
 import Post from "../components/Post";
+import { useAppContext } from "../context/AppContext";
+import { postFilterBy } from "../helperFunctions";
 
 function ExploreContents() {
+  const { posts, sortBy } = useAppContext();
+  const [exploreBy, setExploreBy] = useState("All");
+  console.log("exploreBy: ", exploreBy);
+
   const filterButtons = [
     {
-      filterBy: "Plants",
+      filterBy: "All",
     },
     {
       filterBy: "Trees",
@@ -18,30 +24,43 @@ function ExploreContents() {
       filterBy: "Organic",
     },
     {
-      filterBy: "Pots",
+      filterBy: "Soil",
     },
     {
-      filterBy: "Plants",
+      filterBy: "plants",
     },
   ];
+  const postToDisplay = postFilterBy(sortBy, posts);
+  const postToExplore = postToDisplay.filter((post) =>
+    exploreBy === "All" ? true : post.content.toLowerCase().includes(exploreBy.toLowerCase())
+  );
+
   return (
     <div>
-      <h1 className="mt-0">Explore</h1>
-      <div className="flex justify-content-between mb-3">
-        {filterButtons.map(({ filterBy }) => (
-          <Button
-            label={filterBy}
-            severity="secondary"
-            outlined
-          />
-        ))}
+      <h1 className="mt-0">Explore - {postToExplore?.length} posts</h1>
+      <div className="">
+        <section className="flex justify-content-between mb-3">
+          {filterButtons.map(({ filterBy }) => (
+            <Button
+              label={filterBy}
+              severity="secondary"
+              outlined
+              raised={filterBy === exploreBy}
+              onClick={(e) => {
+                setExploreBy(filterBy);
+              }}
+            />
+          ))}
+        </section>
+        <section>
+          {postToExplore?.map((post, i) => (
+            <Post
+              key={`${post?._id}`}
+              post={post}
+            />
+          ))}
+        </section>
       </div>
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
     </div>
   );
 }
