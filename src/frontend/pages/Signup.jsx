@@ -8,6 +8,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { UserContext } from "../context/UserContext";
 // import { LOGIN } from "../reducers/userReducer";
 import { Toast } from "primereact/toast";
+import { USER_LOGGED_IN } from "../reducers/AuthReducer";
+import { useAuthentication } from "../context/AuthContext";
+import { getAllUsers, handSignUp } from "../services";
+import { useAppContext } from "../context/AppContext";
+import { UPDATE_APP_STATE } from "../reducers/AppReducer";
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -16,15 +21,28 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    customInfo: {
+      tags: ["Future", "Things", "Live on", "Brave", "Finish", "Real", "Exist", "Soul"],
+      bio: "My Awesome Bio here",
+      portfolioUrl: "Sunny@main.com",
+      avatar:
+        "https://source.boringavatars.com/beam/120/Mary%20Edwards?colors=a7cd2c,bada5f,cee891,e1f5c4,50c8c6",
+    },
   });
+  const { dispatch } = useAuthentication();
+  const { dispatch: AppDispatch } = useAppContext();
 
   const toast = useRef();
 
   const Navigate = useNavigate();
   const location = useLocation();
+  const updateAppState = (key, value) =>
+    AppDispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    const updateUserLogIn = (payload) => dispatch({ type: USER_LOGGED_IN, payload: payload });
 
     const isFormFilled = Object.values(form).map((param) => Boolean(param));
     if (isFormFilled.some((param) => param === false)) {
@@ -48,13 +66,14 @@ const Signup = () => {
     }
     try {
       delete form.confirmPassword;
-      const { status, data } = await axios.post("/api/auth/signup", form, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (status === 201) {
-        localStorage.setItem("userToken", JSON.stringify(data?.encodedToken));
-        localStorage.setItem("foundUser", JSON.stringify(data?.createdUser));
-        Navigate(location?.state?.from ?? "/products");
+      const signUpResponse = await handSignUp(form);
+      if (signUpResponse?.status === 201) {
+        updateUserLogIn({
+          user: signUpResponse?.data?.createdUser,
+          token: signUpResponse?.data?.encodedToken,
+        });
+        getAllUsers(updateAppState);
+        Navigate(location?.state?.from ?? "/");
       }
     } catch (error) {
       console.error("data.foundUser - error: ", error);
@@ -88,12 +107,30 @@ const Signup = () => {
               </Link>
             </div>
 
-            <form onSubmit={submitHandler}>
+            <form
+              onSubmit={submitHandler}
+              className="form-grid grid">
               {[
-                { field: "firstName", placeholder: "Enter you first name", label: "First Name" },
-                { field: "lastName", placeholder: "Enter you last name", label: "Last Name" },
-              ]?.map(({ field, placeholder, label }) => (
-                <>
+                {
+                  field: "firstName",
+                  placeholder: "Enter you first name",
+                  label: "First Name",
+                  colWidth: 6,
+                },
+                {
+                  field: "lastName",
+                  placeholder: "Enter you last name",
+                  label: "Last Name",
+                  colWidth: 6,
+                },
+                {
+                  field: "username",
+                  placeholder: "Enter you user name",
+                  label: "User Name",
+                  colWidth: 12,
+                },
+              ]?.map(({ field, placeholder, label, colWidth }) => (
+                <div className={`col-${colWidth}`}>
                   <label
                     htmlFor={field}
                     className="block text-900  mb-2">
@@ -108,24 +145,26 @@ const Signup = () => {
                     className="w-full "
                     required
                   />
-                </>
+                </div>
               ))}
-              <label
-                htmlFor="email"
-                className="block text-900 ">
-                Email
-              </label>
-              <InputText
-                value={form.email}
-                id="email"
-                type="text"
-                onChange={(e) => setFormField("email", e)}
-                placeholder="Email address"
-                className="w-full mb-3"
-                required
-              />
+              <div className="col-12">
+                <label
+                  htmlFor="email"
+                  className="block text-900 ">
+                  Email
+                </label>
+                <InputText
+                  value={form.email}
+                  id="email"
+                  type="text"
+                  onChange={(e) => setFormField("email", e)}
+                  placeholder="Email address"
+                  className="w-full mb-3"
+                  required
+                />
+              </div>
 
-              <div className="">
+              <div className="col-6">
                 <label
                   htmlFor="password"
                   className={`block text-900 `}>
@@ -143,7 +182,7 @@ const Signup = () => {
                   inputStyle={{ width: "100%" }}
                 />
               </div>
-              <div className="">
+              <div className="col-6">
                 <label
                   htmlFor="password"
                   className={`block text-900 `}>
@@ -175,11 +214,13 @@ const Signup = () => {
                 className="w-full mt-3"
                 onClick={() => {
                   setForm({
+                    ...form,
                     firstName: "Thousand",
                     lastName: "Sunny",
                     email: "thousandSunny@gmail.com",
                     password: "guest",
                     confirmPassword: "guest",
+                    username: "Sunny",
                   });
                 }}
               />

@@ -22,7 +22,7 @@ const uploadButtons = [
   // },
   {
     icon: "filetype-gif",
-    command: async () => {  
+    command: async () => {
       try {
         const response = await axios.post("https://freeimage.host/api/1/upload", "files", {
           params: {
@@ -47,7 +47,7 @@ const uploadButtons = [
     },
   },
 ];
-function CreatePost() {
+function CreatePost({ setVisible }) {
   const [value, setValue] = useState("");
   const [files, setFiles] = useState([]);
   const { dispatch } = useAppContext();
@@ -137,6 +137,7 @@ function CreatePost() {
               const response = await addPost(updateAppState, postContent, authToken);
               if (response === 201) {
                 setValue("");
+                setVisible && setVisible(false);
               }
             }}
           />

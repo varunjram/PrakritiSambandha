@@ -99,7 +99,7 @@ const AppReducer = (state, { type, payload }) => {
     //   return { ...state, posts: sort };
 
     default:
-      throw new Error("Not a reducer function");
+      // throw new Error("Not a reducer function");
   }
 };
 

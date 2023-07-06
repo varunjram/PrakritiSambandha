@@ -5,6 +5,7 @@ const AuthState = {
 };
 
 function AuthReducer(state, { type, payload }) {
+  console.log(`Ran AuthReducer-@-${type}:`, payload);
   switch (type) {
     case "USER_LOGGED_IN":
       console.log("payload: ", payload);
