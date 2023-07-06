@@ -74,7 +74,7 @@ function RightSideContent() {
               <div
                 className="flex-grow-1 "
                 onClick={() => {
-                  Navigate(`/profile/${username}`);
+                  Navigate(`/profile/${username}/${_id}`);
                 }}>
                 <h3 className="m-0">{`${firstName} ${lastName}`}</h3>
                 <p className="text-500 m-0">@{username}</p>

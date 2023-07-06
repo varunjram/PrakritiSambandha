@@ -4,20 +4,32 @@ import { useAuthentication } from "../context/AuthContext";
 import { USER_LOGGED_OUT } from "../reducers/AuthReducer";
 import LeftSideContent from "./LeftSideContent";
 import RightSideContent from "./RightSideContent";
+import { useNavigate } from "react-router-dom";
 
 function Layout({ children }) {
-  const { dispatch } = useAuthentication();
+  const { dispatch, user } = useAuthentication();
+  const Navigate = useNavigate();
+
   return (
     <div>
       <div className="flex justify-content-between">
         <h2 className="m-2 ml-6 ">Prakriti</h2>
-        <Button
-          icon="bi bi-log-out"
-          label="Logout"
-          onClick={() => {
-            dispatch({ type: USER_LOGGED_OUT });
-          }}
-        />
+        <div>
+          <Button
+            icon="bi bi-person-circle"
+            text
+            className="text-3xl m-0 p-0 mr-3"
+            onClick={() => Navigate(`/profile/${user?.username}/${user?._id}`)}
+          />
+          <Button
+            icon="bi bi-box-arrow-right"
+            text
+            className="text-3xl m-0 p-0 mr-3"
+            onClick={() => {
+              dispatch({ type: USER_LOGGED_OUT });
+            }}
+          />
+        </div>
       </div>
       <main className="flex surface-100">
         <LeftSideContent />

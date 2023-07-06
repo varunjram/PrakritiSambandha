@@ -18,13 +18,13 @@ import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
 import { postFollowHandler } from "../services/postServices";
 
 function ProfileContents() {
-  const { sortBy, userPosts, dispatch, users, avatarOptions } = useAppContext();
+  const { sortBy, userPosts, dispatch, avatarOptions } = useAppContext();
   const { authToken, dispatch: authDispatch, user } = useAuthentication();
 
   const {
     user: { username: loggedInUser },
   } = useAuthentication();
-  const { userName } = useParams();
+  const { userName, userId } = useParams();
   const [selectedUser, setSelectedUser] = useState();
   const [editProfile, setEditProfile] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -39,8 +39,6 @@ function ProfileContents() {
     key: `${i + 1}`,
   }));
   const [selectedAvatar, setSelectedAvatar] = useState({});
-
-  const Navigate = useNavigate();
 
   const {
     _id,
@@ -101,11 +99,11 @@ function ProfileContents() {
     //
     // }
     (async () => {
-      const userResponse = await getUser("501");
+      const userResponse = await getUser(userId);
       console.log("userResponse: ", userResponse);
       setSelectedUser(userResponse);
     })();
-  }, []);
+  }, [userId]);
 
   // const ProfileEditForm = () => {};
 
