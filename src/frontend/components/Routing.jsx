@@ -40,7 +40,7 @@ function Routing() {
         element={<AuthWrapper children={<Bookmarks />} />}
       />
       <Route
-        path="/profile/:userName"
+        path="/profile/:userName/:userId"
         element={<AuthWrapper children={<Profile />} />}
       />
       <Route

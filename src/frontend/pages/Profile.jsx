@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
 import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
-import { EditUser, getAllUserPosts } from "../services";
+import { EditUser, getAllUserPosts, getUser } from "../services";
 import { postFilterBy } from "../helperFunctions/index.js";
 import { useAuthentication } from "../context/AuthContext";
 import { Dialog } from "primereact/dialog";
@@ -47,13 +47,9 @@ function ProfileContents() {
     firstName,
     lastName,
     username,
-    password,
-    createdAt,
-    updatedAt,
     followers,
     following,
-    bookmarks,
-    id,
+
     customInfo,
   } = selectedUser || {};
 
@@ -96,9 +92,20 @@ function ProfileContents() {
   }, [userName]);
 
   useEffect(() => {
-    setSelectedUser(users.find((user) => user?.username === userName));
-    setSelectedAvatar(avatarOptionsForm.find((avatarObj) => avatarObj?.img === customInfo?.avatar));
-  }, [users, userName]);
+    // console.log("userName === loggedInUser?.username: ", userName === loggedInUser?.username);
+    // if (userName === loggedInUser?.username) {
+    //   console.log("loggedInUser:true ", loggedInUser);
+    //   setSelectedUser(loggedInUser);
+    // } else {
+    //   setSelectedUser(users.find((user) => user?.username === userName));
+    //
+    // }
+    (async () => {
+      const userResponse = await getUser("501");
+      console.log("userResponse: ", userResponse);
+      setSelectedUser(userResponse);
+    })();
+  }, []);
 
   // const ProfileEditForm = () => {};
 
@@ -150,10 +157,10 @@ function ProfileContents() {
             style={{ marginLeft: "25%", marginRight: "25%" }}
             className="absolute top-0 flex flex-column justify-content-center  align-items-center text-center ">
             <Avatar
-              image={customInfo?.avatar}
+              image={selectedAvatar?.img}
               className="w-7rem h-7rem flex-1"
             />
-            <p className="w-full flex-1">Selected Avatar</p>
+            {/* <p className="w-full flex-1">Selected Avatar</p> */}
             <div className="flex flex-column gap-2">
               <label htmlFor="username">Bio</label>
               <InputTextarea
@@ -176,22 +183,26 @@ function ProfileContents() {
 
             <Button
               label="Update"
-              onClick={() => {
-                alert("will be edited");
+              onClick={async () => {
                 const EditData = {
                   customInfo: {
                     ...customInfo,
                     bio: editForm?.userBio,
                     portfolioUrl: editForm?.userPortFolio,
-                    avatar: selectedAvatar,
+                    avatar: selectedAvatar.img,
                   },
                 };
-                EditUser(authToken, EditData, UpdateAuthUser);
+                const { user, status } = await EditUser(authToken, EditData, UpdateAuthUser);
+                console.log("statusedit: ", status);
+                if (status === 201) {
+                  setSelectedUser(user);
+                  setEditProfile(false);
+                }
               }}
               className="block absolute bottom-0 right-0"
             />
           </div>
-          <pre>{JSON.stringify(selectedUser, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
       <section className="user-details">
@@ -216,6 +227,10 @@ function ProfileContents() {
                 userPortFolio: customInfo?.portfolioUrl,
                 userBio: customInfo?.bio,
               });
+              setSelectedAvatar(
+                avatarOptionsForm.find((avatarObj) => avatarObj?.img === customInfo?.avatar)
+              );
+              //   );
             }}
           />
         ) : (
@@ -239,6 +254,7 @@ function ProfileContents() {
             .map((tag, i) => (i !== customInfo?.tags.length - 1 ? ` ${tag} ||` : ` ${tag}`))
             .join("")}
         </p>
+        <p className="text-primary">{customInfo?.bio}</p>
         <Link
           className="text-red-500"
           to={"https://www.factretriever.com/"}

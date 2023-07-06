@@ -32,7 +32,7 @@ function LeftSideContent() {
     {
       icon: "person",
       name: "Profile",
-      path: `/profile/${user?.username}`,
+      path: `/profile/${user?.username}/${user?._id}`,
     },
   ];
   return (

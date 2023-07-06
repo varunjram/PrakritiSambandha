@@ -39,9 +39,9 @@ function Post({ post }) {
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
   const updateBookmarks = (value) => authDispatch({ type: UPDATE_BOOKMARKS, payload: value });
-  const isPostLiked = likedBy?.some((likedUser) => likedUser._id === user._id);
+  const isPostLiked = likedBy?.some((likedUser) => likedUser?._id === user?._id);
 
-  const isPostBookmarked = user?.bookmarks?.some((bookmarkUser) => bookmarkUser._id === _id);
+  const isPostBookmarked = user?.bookmarks?.some((bookmarkUser) => bookmarkUser?._id === _id);
   const isLoggedInUsersPost = user?.username === post?.username;
 
   const postButtons = [

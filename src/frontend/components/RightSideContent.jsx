@@ -26,7 +26,7 @@ function RightSideContent() {
     authDispatch({ type: UPDATE_AUTH_STATE, payload: { key: "user", value: data } });
 
   const followingUserIds = currentUser?.following?.map(({ _id }) => _id);
-  const usersToFollow = users.filter(
+  const usersToFollow = users?.filter(
     (user) => ![...followingUserIds, currentUser?._id].includes(user?._id)
   );
   console.log("usersToFollow: ", { usersToFollow, follow: followingUserIds });

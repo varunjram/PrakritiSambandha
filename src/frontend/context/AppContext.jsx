@@ -16,10 +16,6 @@ const AppContextProvider = ({ children }) => {
     getAllUsers(updateAppState);
     getAllPosts(updateAppState);
     dispatch({ type: UPDATE_APP_STATE, payload: { key: "authToken", value: _token } });
-
-    return () => {
-      deleteLocalStorageItemsStartsWith("social");
-    };
   }, []);
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;

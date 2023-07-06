@@ -17,7 +17,7 @@ const AuthContextProvider = ({ children }) => {
     const _user = JSON.parse(localStorage.getItem("socialUser"));
     const token = localStorage.getItem("socialToken");
     if (_user?._id && token) {
-      dispatch({ type: USER_LOGGED_IN, payload: _user });
+      dispatch({ type: USER_LOGGED_IN, payload: { user: _user, token } });
     }
   }, []);
 
