@@ -12,7 +12,7 @@ function Layout({ children }) {
 
   return (
     <div>
-      <div className="flex justify-content-between">
+      <div className="flex justify-content-between sticky top-0 bg-orange-700 z-5 text-white">
         <h2 className="m-2 ml-6 ">Prakriti</h2>
         <div>
           <Button
@@ -31,7 +31,9 @@ function Layout({ children }) {
           />
         </div>
       </div>
-      <main className="flex surface-100">
+      <main
+        className="flex surface-100 "
+        style={{ minHeight: "calc(100vh - 48.8px)" }}>
         <LeftSideContent />
         <div className="flex-grow-1 border-1 p-5 w-6">{children}</div>
         <RightSideContent />
