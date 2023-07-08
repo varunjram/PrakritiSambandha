@@ -9,6 +9,7 @@ import { UPDATE_FOLLOW_USER, UPDATE_SORTBY_METHOD } from "../reducers/AppReducer
 import { postFollowHandler } from "../services";
 import { useAuthentication } from "../context/AuthContext";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
+import SearchUsers from "./SearchUsers";
 
 function RightSideContent() {
   const { users, dispatch, sortBy } = useAppContext();
@@ -37,10 +38,7 @@ function RightSideContent() {
   ];
   return (
     <aside className="w-3 border-1 flex flex-column align-items-center pt-5  ">
-      <span className="p-input-icon-left ">
-        <i className="pi pi-search" />
-        <InputText placeholder="Search" />
-      </span>
+      <SearchUsers />
       <div className="mt-2">
         {sortByMenus.map(({ method, label, icon }) => (
           <Button
@@ -53,7 +51,6 @@ function RightSideContent() {
           />
         ))}
       </div>
-
       <article className="p-3 align-self-stretch">
         <div className="flex justify-content-between border-bottom-2">
           <p className="mb-1">Who to Follow?</p>

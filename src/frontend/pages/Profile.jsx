@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../components/Layout";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import Post from "../components/Post";
-import { useAppContext } from "../context/AppContext";
-import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
-import { EditUser, getAllUserPosts, getUser } from "../services";
-import { postFilterBy } from "../helperFunctions/index.js";
-import { useAuthentication } from "../context/AuthContext";
 import { Dialog } from "primereact/dialog";
-import { RadioButton } from "primereact/radiobutton";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { Chips } from "primereact/chips";
+import { RadioButton } from "primereact/radiobutton";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Layout from "../components/Layout";
+import LoadingSpinner from "../components/LoadingSpinner";
+import Post from "../components/Post";
+import { useAppContext } from "../context/AppContext";
+import { useAuthentication } from "../context/AuthContext";
+import { postFilterBy } from "../helperFunctions/index.js";
+import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
+import { EditUser, getAllUserPosts, getUser } from "../services";
 import { postFollowHandler } from "../services/postServices";
 
 function ProfileContents() {
@@ -90,14 +90,6 @@ function ProfileContents() {
   }, [userName]);
 
   useEffect(() => {
-    // console.log("userName === loggedInUser?.username: ", userName === loggedInUser?.username);
-    // if (userName === loggedInUser?.username) {
-    //   console.log("loggedInUser:true ", loggedInUser);
-    //   setSelectedUser(loggedInUser);
-    // } else {
-    //   setSelectedUser(users.find((user) => user?.username === userName));
-    //
-    // }
     (async () => {
       const userResponse = await getUser(userId);
       console.log("userResponse: ", userResponse);
@@ -203,73 +195,76 @@ function ProfileContents() {
           {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
-      <section className="user-details">
-        <div className=" flex justify-content-center max-content-max ">
-          <Avatar
-            image={customInfo?.avatar}
-            className="w-7rem h-7rem"
-          />
-        </div>
-        <h1 className="mt-0">{`${firstName} ${lastName}`}</h1>
-        <h3 className="text-500">@{username}</h3>
-        {isProfileOfLoggedInUser ? (
-          <Button
-            label="Edit Profile"
-            outlined
-            className="secondary"
-            onClick={() => {
-              setEditProfile(true);
+      {selectedUser && (
+        <section className="user-details">
+          <div className=" flex justify-content-center max-content-max ">
+            <Avatar
+              image={customInfo?.avatar}
+              className="w-7rem h-7rem"
+            />
+          </div>
+          <h1 className="mt-0">{`${firstName} ${lastName}`}</h1>
+          <h3 className="text-500">@{username}</h3>
+          {isProfileOfLoggedInUser ? (
+            <Button
+              label="Edit Profile"
+              outlined
+              className="secondary"
+              onClick={() => {
+                setEditProfile(true);
 
-              setEditForm({
-                userTags: customInfo?.tags,
-                userPortFolio: customInfo?.portfolioUrl,
-                userBio: customInfo?.bio,
-              });
-              setSelectedAvatar(
-                avatarOptionsForm.find((avatarObj) => avatarObj?.img === customInfo?.avatar)
-              );
-              //   );
-            }}
-          />
-        ) : (
-          <Button
-            label={isFollowedUser ? "Un-follow" : "Follow"}
-            className="secondary"
-            onClick={async () => {
-              const type = isFollowedUser ? "unfollow" : "follow";
-              await postFollowHandler(
-                type,
-                authToken,
-                selectedUser?._id,
-                UpdateAuthUser,
-                UpdateAppUsers
-              );
-            }}
-          />
-        )}
-        <p className="text-500">
-          {customInfo?.tags
-            .map((tag, i) => (i !== customInfo?.tags.length - 1 ? ` ${tag} ||` : ` ${tag}`))
-            .join("")}
-        </p>
-        <p className="text-primary">{customInfo?.bio}</p>
-        <Link
-          className="text-red-500"
-          to={"https://www.factretriever.com/"}
-          target="_blank">
-          {customInfo?.portfolioUrl}
-        </Link>
-        <div className="flex justify-content-center mb-3">
-          {userStats.map(({ stat, value }) => (
-            <div className="pl-5 pr-5">
-              <p className="mb-0">
-                <strong>{value}</strong>
-              </p>
-              <p className="mb-0 mt-1">{stat}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+                setEditForm({
+                  userTags: customInfo?.tags,
+                  userPortFolio: customInfo?.portfolioUrl,
+                  userBio: customInfo?.bio,
+                });
+                setSelectedAvatar(
+                  avatarOptionsForm.find((avatarObj) => avatarObj?.img === customInfo?.avatar)
+                );
+                //   );
+              }}
+            />
+          ) : (
+            <Button
+              label={isFollowedUser ? "Un-follow" : "Follow"}
+              className="secondary"
+              onClick={async () => {
+                const type = isFollowedUser ? "unfollow" : "follow";
+                await postFollowHandler(
+                  type,
+                  authToken,
+                  selectedUser?._id,
+                  UpdateAuthUser,
+                  UpdateAppUsers
+                );
+              }}
+            />
+          )}
+          <p className="text-500">
+            {customInfo?.tags
+              .map((tag, i) => (i !== customInfo?.tags.length - 1 ? ` ${tag} ||` : ` ${tag}`))
+              .join("")}
+          </p>
+          <p className="text-primary">{customInfo?.bio}</p>
+          <Link
+            className="text-red-500"
+            to={"https://www.factretriever.com/"}
+            target="_blank">
+            {customInfo?.portfolioUrl}
+          </Link>
+          <div className="flex justify-content-center mb-3">
+            {userStats.map(({ stat, value }) => (
+              <div className="pl-5 pr-5">
+                <p className="mb-0">
+                  <strong>{value}</strong>
+                </p>
+                <p className="mb-0 mt-1">{stat}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+      {!selectedUser && <LoadingSpinner />}
       <section className="user-posts">
         {postToShow?.map((post) => (
           <Post
