@@ -10,6 +10,7 @@ import Explore from "../pages/Explore";
 import Bookmarks from "../pages/Bookmarks";
 import Profile from "../pages/Profile";
 import AuthWrapper from "./AuthWrapper";
+import SinglePost from "../pages/SinglePost";
 
 function Routing() {
   return (
@@ -42,6 +43,10 @@ function Routing() {
       <Route
         path="/profile/:userName/:userId"
         element={<AuthWrapper children={<Profile />} />}
+      />
+      <Route
+        path="/post/:postId"
+        element={<AuthWrapper children={<SinglePost />} />}
       />
       <Route
         path="/*"

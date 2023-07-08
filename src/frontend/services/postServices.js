@@ -19,7 +19,7 @@ export const addPost = async (addPosts, postContent, authToken) => {
   try {
     const { data, status } = await axios.post(
       "/api/posts",
-      { postData: { content: postContent?.value, images: postContent?.files } },
+      { postData: { content: postContent?.postTextBody, images: postContent?.files } },
       {
         headers: {
           authorization: authToken,
@@ -50,6 +50,7 @@ export const handleLikeAndDislike = async (type, authToken, postId, addPosts) =>
     );
     if (status === 201) {
       addPosts("posts", data?.posts);
+      return { status };
     }
   } catch (error) {
     console.error(`error:while ${type} post `, error);
@@ -72,13 +73,14 @@ export const handlePostEdit = async (authToken, contentToUpdate, postId, addPost
     console.log("edit post response ", { data, status });
     if (status === 201) {
       addPosts("posts", data?.posts);
+      return { status };
     }
   } catch (error) {
     console.error("error:while editing post ", error);
   }
 };
 
-export const handlePostDelete = async (authToken, postId, addPosts) => {
+export const handlePostDelete = async (authToken, postId, deletePost) => {
   try {
     const { data, status } = await axios.delete(`/api/posts/${postId}`, {
       headers: {
@@ -87,7 +89,8 @@ export const handlePostDelete = async (authToken, postId, addPosts) => {
     });
     console.log("response", { data, status });
     if (status === 201) {
-      addPosts("posts", data?.posts);
+      deletePost("posts", data?.posts);
+      return { status };
     }
   } catch (error) {
     console.error("error:while deleting post ", error);

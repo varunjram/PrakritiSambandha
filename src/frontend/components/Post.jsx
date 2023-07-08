@@ -1,28 +1,25 @@
-import React, { useRef, useState } from "react";
 import moment from "moment";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
-import { useAppContext } from "../context/AppContext";
-import { UPDATE_APP_STATE } from "../reducers/AppReducer";
-import {
-  handleBookMark,
-  handleLikeAndDislike,
-  handlePostDelete,
-  handlePostEdit,
-} from "../services";
-import { useAuthentication } from "../context/AuthContext";
-import { UPDATE_BOOKMARKS } from "../reducers/AuthReducer";
-import { Menu } from "primereact/menu";
 import { Dialog } from "primereact/dialog";
-import { InputTextarea } from "primereact/inputtextarea";
+import { Menu } from "primereact/menu";
+import React, { useRef, useState } from "react";
+import { useAppContext } from "../context/AppContext";
+import { useAuthentication } from "../context/AuthContext";
+import { UPDATE_APP_STATE } from "../reducers/AppReducer";
+import { UPDATE_BOOKMARKS } from "../reducers/AuthReducer";
+import { handleBookMark, handleLikeAndDislike, handlePostDelete } from "../services";
+import CreateEditPost from "./CreateEditPost";
+import { useNavigate } from "react-router-dom";
 
 const findUser = (username, users) => {
   return users?.find((user) => user?.username === username) || {};
 };
-function Post({ post }) {
+function Post({ post, toast }) {
   const { users, dispatch } = useAppContext();
   const { authToken, user, dispatch: authDispatch } = useAuthentication();
-  console.log("post: ", post);
+  const Navigate = useNavigate();
+
   const {
     _id,
     content,
@@ -32,9 +29,8 @@ function Post({ post }) {
   } = post || {};
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
-  const [editContent, setEditContent] = useState("content");
   const postedUser = findUser(username, users);
-  const { lastName, firstName, customInfo } = postedUser;
+  const { lastName, firstName, customInfo, _id: userId } = postedUser;
 
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
@@ -46,10 +42,22 @@ function Post({ post }) {
 
   const postButtons = [
     {
-      icon: likeCount ? "heart-fill" : "heart",
-      command: () => {
+      icon: isPostLiked ? "heart-fill" : "heart",
+      command: async () => {
         const type = isPostLiked ? "dislike" : "like";
-        handleLikeAndDislike(type, authToken, _id, updateAppState);
+        const likeResponse = await handleLikeAndDislike(type, authToken, _id, updateAppState);
+
+        if (likeResponse?.status === 201) {
+          type === "like"
+            ? toast.current.show({
+                severity: "success",
+                summary: "Post Liked",
+              })
+            : toast.current.show({
+                severity: "info",
+                summary: "Post Disliked",
+              });
+        }
       },
     },
     {
@@ -60,15 +68,32 @@ function Post({ post }) {
     },
     {
       icon: "share",
-      command: () => {
-        alert("c");
+      command: async () => {
+        try {
+          await navigator.clipboard.writeText("text");
+          console.log("Text copied to clipboard:", "text");
+        } catch (error) {
+          console.error("Error copying text to clipboard:", "error");
+        }
       },
     },
     {
       icon: isPostBookmarked ? "bookmark-fill" : "bookmark",
-      command: () => {
+      command: async () => {
         const type = isPostBookmarked ? "remove-bookmark" : "bookmark";
-        handleBookMark(type, authToken, _id, updateBookmarks);
+        const responseStatus = await handleBookMark(type, authToken, _id, updateBookmarks);
+
+        if (responseStatus?.status === 200) {
+          type === "bookmark"
+            ? toast.current.show({
+                severity: "success",
+                summary: "Post Bookmarked",
+              })
+            : toast.current.show({
+                severity: "info",
+                summary: "Removed Bookmark",
+              });
+        }
       },
     },
   ];
@@ -76,69 +101,43 @@ function Post({ post }) {
     {
       label: "Edit",
       icon: "bi bi-pencil",
+      disabled: isLoggedInUsersPost ? false : true,
       command: () => {
         setVisible(true);
-        setEditContent(content);
       },
     },
     {
       label: "Delete",
       icon: "bi bi-trash",
-      command: () => {
-        if (isLoggedInUsersPost) {
-          handlePostDelete(authToken, _id, updateAppState);
-        } else {
-          alert("this is not your post to delete");
+      command: async () => {
+        const { status } = await handlePostDelete(authToken, _id, updateAppState);
+        if (status === 201) {
+          toast.current.show({
+            severity: "success",
+            summary: "Successfully Deleted",
+          });
         }
       },
     },
   ];
-  const dialogFooterContent = (
-    <div>
-      <Button
-        label="Cancel"
-        icon="pi pi-times"
-        onClick={() => {
-          setVisible(false);
-          setEditContent("");
-        }}
-        className="p-button-text"
-      />
-      <Button
-        label="Update"
-        icon="pi pi-check"
-        onClick={() => {
-          setVisible(false);
-          if (isLoggedInUsersPost) {
-            alert("will be edited");
-            handlePostEdit(authToken, editContent, _id, updateAppState);
-          }
-          alert("will not be edited");
-        }}
-        autoFocus
-      />
-    </div>
-  );
 
+  const navigateToPerson = () => Navigate(`/profile/${username}/${userId}`);
   return (
     <section className="flex surface-0 mb-4 relative text-left">
-      {/* <pre>{JSON.stringify(isPostLiked, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       <Dialog
         header="Edit Post"
         visible={visible}
         style={{ width: "50vw" }}
-        onHide={() => setVisible(false)}
-        footer={dialogFooterContent}>
-        <InputTextarea
-          value={editContent}
-          onChange={(e) => setEditContent(e.target.value)}
-          rows={5}
-          cols={30}
-          className="surface-100"
+        onHide={() => setVisible(false)}>
+        <CreateEditPost
+          toast={toast}
+          editPost={post}
+          setEditDialogVisibility={setVisible}
         />
       </Dialog>
-      <div className="p-3 pr-0">
+      <div
+        className="p-3 pr-0 cursor-pointer"
+        onClick={navigateToPerson}>
         <Avatar
           image={customInfo?.avatar}
           size="large"
@@ -147,13 +146,19 @@ function Post({ post }) {
         />
       </div>
       <div className="flex-grow-1 p-3 ">
-        <div className="flex align-items-center ">
+        <div
+          className="flex align-items-center cursor-pointer"
+          onClick={navigateToPerson}>
           <h4 className="mr-2">{`${firstName} ${lastName}`}</h4>
           <span className="text-500">
             @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
           </span>
         </div>
-        <div className="white-space-pre-wrap ">{content}</div>
+        <div
+          className="white-space-pre-wrap cursor-pointer "
+          onClick={() => Navigate(`/post/${_id}`)}>
+          {content}
+        </div>
         <div className="flex justify-content-between mt-2 ">
           {postButtons.map(({ icon, command, activeIcon }, index) => (
             <Button
@@ -163,7 +168,7 @@ function Post({ post }) {
               text
               aria-label="Filter"
               onClick={command}
-              badge={icon === "heart-fill" && likeCount && likeCount}
+              badge={icon.includes("heart") && likeCount}
               badgeClassName="absolute top-0 right-0 "
             />
           ))}
@@ -176,7 +181,7 @@ function Post({ post }) {
         text
         onClick={(event) => postMenuRef.current.toggle(event)}
         aria-controls="popup_menu_right"
-        aria-haspopup
+        disabled={isLoggedInUsersPost ? false : true}
       />
       <Menu
         model={postMenu}
@@ -185,7 +190,6 @@ function Post({ post }) {
         id="popup_menu_right"
         popupAlignment="left"
       />
-      {/* <pre>{JSON.stringify(post, null, 2)}</pre> */}
     </section>
   );
 }

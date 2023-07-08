@@ -1,16 +1,17 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Dropdown } from "primereact/dropdown";
-import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
-import { useAuthentication } from "../context/AuthContext";
+import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import CreatePost from "./CreatePost";
+import { Toast } from "primereact/toast";
+import React, { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuthentication } from "../context/AuthContext";
+import CreatePost from "./CreateEditPost";
 
 function LeftSideContent() {
   const { user } = useAuthentication();
   console.log("user: ", user);
   const [visible, setVisible] = useState(false);
+  const toast = useRef(null);
 
   const { firstName, lastName, customInfo, username } = user || {};
   const sideMenu = [
@@ -37,12 +38,17 @@ function LeftSideContent() {
   ];
   return (
     <aside className="w-3 border-1 flex flex-column  justify-content-between ">
+      <Toast ref={toast} />
+
       <Dialog
         header="Create New Post"
         visible={visible}
         style={{ width: "50vw" }}
         onHide={() => setVisible(false)}>
-        <CreatePost setVisible={setVisible} />
+        <CreatePost
+          setVisible={setVisible}
+          toast={toast}
+        />
       </Dialog>
       <div className="mt-5">
         <div className="flex flex-column ml-auto min-w-min">

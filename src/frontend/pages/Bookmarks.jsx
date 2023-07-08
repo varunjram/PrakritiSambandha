@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useRef } from "react";
 import Layout from "../components/Layout";
 import { useAuthentication } from "../context/AuthContext";
 import { useAppContext } from "../context/AppContext";
 import { postFilterBy } from "../helperFunctions";
 import Post from "../components/Post";
+import { Toast } from "primereact/toast";
 
 function BookmarksContents() {
   const { user } = useAuthentication();
   const { posts, sortBy } = useAppContext();
+  const toast = useRef();
 
   const userBookmarks = user?.bookmarks?.map((post) => post?._id);
   console.log("userBookmarks: ", userBookmarks);
@@ -19,10 +21,9 @@ function BookmarksContents() {
   console.log("postToDisplay: ", postToDisplay);
   return (
     <div>
+      <Toast ref={toast} />
+
       <h1 className="mt-0">Your Bookmarks</h1>
-      {/* <pre>{JSON.stringify(user?.bookmarks, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify(postToDisplay, null, 2)}</pre> */}
-      {/* <pre>{JSON.stringify({ test: "test" }, null, 2)}</pre> */}
       <div>
         {user?.bookmarks?.length ? (
           <div>
@@ -30,6 +31,7 @@ function BookmarksContents() {
               <Post
                 key={`${post?._id}`}
                 post={post}
+                toast={toast}
               />
             ))}
           </div>

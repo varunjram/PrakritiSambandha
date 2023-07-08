@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Layout from "../components/Layout";
 import { Button } from "primereact/button";
 import Post from "../components/Post";
 import { useAppContext } from "../context/AppContext";
 import { postFilterBy } from "../helperFunctions";
+import { Toast } from "primereact/toast";
 
 function ExploreContents() {
   const { posts, sortBy } = useAppContext();
   const [exploreBy, setExploreBy] = useState("All");
-  console.log("exploreBy: ", exploreBy);
+  
+  const toast = useRef();
 
   const filterButtons = [
     {
@@ -37,6 +39,8 @@ function ExploreContents() {
 
   return (
     <div>
+      <Toast ref={toast} />
+
       <h1 className="mt-0">Explore - {postToExplore?.length} posts</h1>
       <div className="">
         <section className="flex justify-content-between mb-3">
@@ -57,6 +61,7 @@ function ExploreContents() {
             <Post
               key={`${post?._id}`}
               post={post}
+              toast={toast}
             />
           ))}
         </section>

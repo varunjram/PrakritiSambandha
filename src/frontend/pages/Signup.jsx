@@ -23,8 +23,8 @@ const Signup = () => {
     confirmPassword: "",
     customInfo: {
       tags: ["Future", "Things", "Live on", "Brave", "Finish", "Real", "Exist", "Soul"],
-      bio: "My Awesome Bio here",
-      portfolioUrl: "Sunny@main.com",
+      bio: "Add your Awesome Bio here",
+      portfolioUrl: "MyPortfolio.com",
       avatar:
         "https://source.boringavatars.com/beam/120/Mary%20Edwards?colors=a7cd2c,bada5f,cee891,e1f5c4,50c8c6",
     },

@@ -1,16 +1,14 @@
-import React, { useRef, useState } from "react";
 import { Avatar } from "primereact/avatar";
-import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
-import { addPost } from "../services";
-import { useAppContext } from "../context/AppContext";
-import { UPDATE_APP_STATE } from "../reducers/AppReducer";
-import { useAuthentication } from "../context/AuthContext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { OverlayPanel } from "primereact/overlaypanel";
+import React, { useEffect, useRef, useState } from "react";
+import { useAppContext } from "../context/AppContext";
+import { useAuthentication } from "../context/AuthContext";
+import { UPDATE_APP_STATE } from "../reducers/AppReducer";
+import { addPost, handlePostEdit } from "../services";
 import emojis from "../utils/emoji";
-import { FileUpload } from "primereact/fileupload";
 import FileUploader from "./FileUploader";
-import axios from "axios";
 // import FileUploader2 from "./FileUploader2";
 
 const uploadButtons = [
@@ -22,23 +20,7 @@ const uploadButtons = [
   // },
   {
     icon: "filetype-gif",
-    command: async () => {
-      try {
-        const response = await axios.post("https://freeimage.host/api/1/upload", "files", {
-          params: {
-            key: "6d207e02198a847aa98d0a2a901485a5",
-            action: "upload",
-          },
-          headers: {
-            "Content-Type": "image",
-          },
-        });
-        console.log("response: ", response);
-      } catch (error) {
-        console.log("error: ", error);
-      }
-      alert("b");
-    },
+    command: async () => {},
   },
   {
     icon: "emoji-wink",
@@ -47,15 +29,23 @@ const uploadButtons = [
     },
   },
 ];
-function CreatePost({ setVisible }) {
-  const [value, setValue] = useState("");
+function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisibility }) {
+  const [postTextBody, setPostTextBody] = useState("");
   const [files, setFiles] = useState([]);
   const { dispatch } = useAppContext();
   const { authToken, user } = useAuthentication();
   const emojiRef = useRef(null);
 
+  const { content, _id } = editPost || {};
+
   const updateAppState = (key, value) =>
     dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
+
+  useEffect(() => {
+    if (editPost) {
+      setPostTextBody(content);
+    }
+  }, []);
 
   return (
     <section className="flex surface-0">
@@ -69,8 +59,8 @@ function CreatePost({ setVisible }) {
       </div>
       <div className="flex-grow-1 p-3 ">
         <InputTextarea
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={postTextBody}
+          onChange={(e) => setPostTextBody(e.target.value)}
           rows={5}
           cols={30}
           className="surface-100"
@@ -117,7 +107,7 @@ function CreatePost({ setVisible }) {
                           className="text-2xl m-1"
                           onClick={() => {
                             emojiRef.current.toggle(false);
-                            setValue((prev) => [prev.split(), emoji].join(" "));
+                            setPostTextBody((prev) => [prev.split(), emoji].join(" "));
                           }}>
                           {emoji}
                         </span>
@@ -129,15 +119,46 @@ function CreatePost({ setVisible }) {
             )}
           </div>
           <Button
-            label="Post"
+            label={editPost ? "Update" : "Post"}
             onClick={async () => {
-              console.log("files: ", files);
-              localStorage.setItem("testImage", JSON.stringify(files, null, 2));
-              const postContent = { value, files };
-              const response = await addPost(updateAppState, postContent, authToken);
-              if (response === 201) {
-                setValue("");
-                setVisible && setVisible(false);
+              if (!editPost) {
+                if (!postTextBody.trim()) {
+                  toast.current.show({
+                    severity: "error",
+                    summary: "Can not Create Empty post",
+                    detail: "Add some content to create a Post",
+                  });
+                  return;
+                }
+                const postContent = { postTextBody, files };
+                const response = await addPost(updateAppState, postContent, authToken);
+                if (response === 201) {
+                  toast.current.show({
+                    severity: "success",
+                    summary: "Post Created",
+                  });
+                  setPostTextBody("");
+                  setVisible && setVisible(false);
+                }
+              } else {
+                const { status } = await handlePostEdit(
+                  authToken,
+                  postTextBody,
+                  _id,
+                  updateAppState
+                );
+                if (status === 201) {
+                  toast.current.show({
+                    severity: "success",
+                    summary: "Successfully edited Post",
+                  });
+                  setEditDialogVisibility(false);
+                } else {
+                  toast.current.show({
+                    severity: "error",
+                    summary: "Could not edit Post",
+                  });
+                }
               }
             }}
           />
@@ -147,4 +168,4 @@ function CreatePost({ setVisible }) {
   );
 }
 
-export default CreatePost;
+export default CreateEditPost;

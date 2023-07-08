@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { RadioButton } from "primereact/radiobutton";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -16,9 +16,10 @@ import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
 import { EditUser, getAllUserPosts, getUser } from "../services";
 import { postFollowHandler } from "../services/postServices";
+import { Toast } from "primereact/toast";
 
 function ProfileContents() {
-  const { sortBy, userPosts, dispatch, avatarOptions } = useAppContext();
+  const { sortBy, userPosts, dispatch, avatarOptions, posts } = useAppContext();
   const { authToken, dispatch: authDispatch, user } = useAuthentication();
 
   const {
@@ -33,6 +34,8 @@ function ProfileContents() {
     userBio: "",
   });
 
+  const toast = useRef();
+
   const avatarOptionsForm = avatarOptions.map((ele, i) => ({
     img: ele,
     name: `Avatar ${i + 1}`,
@@ -40,16 +43,8 @@ function ProfileContents() {
   }));
   const [selectedAvatar, setSelectedAvatar] = useState({});
 
-  const {
-    _id,
-    firstName,
-    lastName,
-    username,
-    followers,
-    following,
-
-    customInfo,
-  } = selectedUser || {};
+  const { _id, firstName, lastName, username, followers, following, customInfo } =
+    selectedUser || {};
 
   const isFollowedUser = user?.following?.some((follower) => follower?._id === _id);
 
@@ -87,7 +82,7 @@ function ProfileContents() {
     (async () => {
       await getAllUserPosts(userName, UpdateAppState);
     })();
-  }, [userName]);
+  }, [userName, posts]);
 
   useEffect(() => {
     (async () => {
@@ -101,6 +96,7 @@ function ProfileContents() {
 
   return (
     <div className="text-center">
+      <Toast ref={toast} />
       <Dialog
         header="Edit Profile"
         visible={editProfile}
@@ -145,13 +141,15 @@ function ProfileContents() {
           }
           <div
             style={{ marginLeft: "25%", marginRight: "25%" }}
-            className="absolute top-0 flex flex-column justify-content-center  align-items-center text-center ">
-            <Avatar
-              image={selectedAvatar?.img}
-              className="w-7rem h-7rem flex-1"
-            />
+            className="absolute top-0 grid justify-content-center  align-items-center text-center ">
+            <div className="col-12">
+              <Avatar
+                image={selectedAvatar?.img}
+                className="w-7rem h-7rem flex-1"
+              />
+            </div>
             {/* <p className="w-full flex-1">Selected Avatar</p> */}
-            <div className="flex flex-column gap-2">
+            <div className="flex flex-column gap-2 col-12">
               <label htmlFor="username">Bio</label>
               <InputTextarea
                 id="userBio"
@@ -161,7 +159,7 @@ function ProfileContents() {
                 onChange={handleEditFormChange}
               />
             </div>
-            <div className="flex flex-column gap-2">
+            <div className="flex flex-column gap-2 col-12">
               <label htmlFor="username">Portfoil URL</label>
               <InputText
                 value={editForm.userPortFolio}
@@ -170,7 +168,6 @@ function ProfileContents() {
                 onChange={handleEditFormChange}
               />
             </div>
-
             <Button
               label="Update"
               onClick={async () => {
@@ -189,12 +186,13 @@ function ProfileContents() {
                   setEditProfile(false);
                 }
               }}
-              className="block absolute bottom-0 right-0"
+              className="col-3"
             />
           </div>
           {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
+      s
       {selectedUser && (
         <section className="user-details">
           <div className=" flex justify-content-center max-content-max ">
@@ -270,6 +268,7 @@ function ProfileContents() {
           <Post
             post={post}
             key={`${post?._id}-${post?.username}`}
+            toast={toast}
           />
         ))}
       </section>

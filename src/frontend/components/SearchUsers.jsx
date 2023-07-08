@@ -1,50 +1,39 @@
-import React, { useState } from "react";
 import { AutoComplete } from "primereact/autocomplete";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { useAuthentication } from "../context/AuthContext";
 
 const SearchUsers = () => {
-  const { users, dispatch, sortBy } = useAppContext();
-  const { authToken, dispatch: authDispatch, user: currentUser } = useAuthentication();
-
+  const { users } = useAppContext();
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [filteredCountries, setFilteredCountries] = useState(null);
+  const [filteredPeople, setFilteredPeople] = useState(null);
 
-  const usersToFollow = users?.filter(
-    (user) =>
-      ![...currentUser?.following?.map(({ _id }) => _id), currentUser?._id].includes(user?._id)
-  );
-
-  const peopleOptions = usersToFollow.map((person, i) => ({
+  const peopleOptions = users.map((person, i) => ({
     ...person,
     fullName: `${person?.firstName} ${person?.lastName}`,
   }));
-  console.log("usersToFollow: ", usersToFollow);
-
-  // const connections =
+  console.log("users: ", users);
 
   const search = (event) => {
-    // Timeout to emulate a network connection
     setTimeout(() => {
-      let _filteredCountries;
+      let _filteredPeople;
 
       if (!event.query.trim().length) {
-        _filteredCountries = [...peopleOptions];
+        _filteredPeople = [...peopleOptions];
       } else {
-        _filteredCountries = peopleOptions.filter((users) => {
+        _filteredPeople = peopleOptions.filter((users) => {
           return users.firstName.toLowerCase().includes(event.query.toLowerCase());
         });
       }
-      setFilteredCountries(_filteredCountries);
+      setFilteredPeople(_filteredPeople);
     }, 250);
   };
   const Navigate = useNavigate();
 
   const itemTemplate = (user) => {
-    const { _id, lastName, firstName, username, customInfo } = user;
+    const { lastName, firstName, username, customInfo } = user;
     return (
       <div className="flex align-items-center cursor-pointer">
         <Avatar
@@ -66,15 +55,12 @@ const SearchUsers = () => {
   return (
     <div className="card flex justify-content-center">
       <div className="p-inputgroup">
-        <Button
-          icon="pi pi-search "
-          //   className="p-button-warning"
-        />
+        <Button icon="pi pi-search " />
         <AutoComplete
           placeholder="Search"
           field="fullName"
           value={selectedPerson}
-          suggestions={filteredCountries}
+          suggestions={filteredPeople}
           completeMethod={search}
           onChange={(e) => {
             setSelectedPerson(e.value);
