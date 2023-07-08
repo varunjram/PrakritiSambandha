@@ -192,7 +192,7 @@ function ProfileContents() {
           {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
-      s
+              
       {selectedUser && (
         <section className="user-details">
           <div className=" flex justify-content-center max-content-max ">

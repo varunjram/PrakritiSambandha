@@ -1,18 +1,14 @@
-import axios from "axios";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
-import React, { useContext, useState, useRef } from "react";
-
+import React, { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { UserContext } from "../context/UserContext";
-// import { LOGIN } from "../reducers/userReducer";
 import { Toast } from "primereact/toast";
-import { USER_LOGGED_IN } from "../reducers/AuthReducer";
-import { useAuthentication } from "../context/AuthContext";
-import { getAllUsers, handSignUp } from "../services";
 import { useAppContext } from "../context/AppContext";
+import { useAuthentication } from "../context/AuthContext";
 import { UPDATE_APP_STATE } from "../reducers/AppReducer";
+import { USER_LOGGED_IN } from "../reducers/AuthReducer";
+import { getAllUsers, handSignUp } from "../services";
 
 const Signup = () => {
   const [form, setForm] = useState({

@@ -20,13 +20,8 @@ function Post({ post, toast }) {
   const { authToken, user, dispatch: authDispatch } = useAuthentication();
   const Navigate = useNavigate();
 
-  const {
-    _id,
-    content,
-    username,
-    createdAt,
-    likes: { likeCount = 0, likedBy = null },
-  } = post || {};
+  const { _id, content, username, createdAt, likes } = post || {};
+  const { likeCount = 0, likedBy = null } = likes || {};
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
   const postedUser = findUser(username, users);
@@ -60,21 +55,22 @@ function Post({ post, toast }) {
         }
       },
     },
-    {
-      icon: "chat-left",
-      command: () => {
-        alert("b");
-      },
-    },
+    // {
+    //   icon: "chat-left",
+    //   command: () => {
+    //     alert("b");
+    //   },
+    // },
     {
       icon: "share",
       command: async () => {
-        try {
-          await navigator.clipboard.writeText("text");
-          console.log("Text copied to clipboard:", "text");
-        } catch (error) {
-          console.error("Error copying text to clipboard:", "error");
-        }
+        const host = "http://localhost:3000";
+        navigator.clipboard.writeText(`${host}/post/${_id}`);
+        toast.current.show({
+          severity: "info",
+          summary: "Link Copied",
+          detail: "You can Start sharing the link copied",
+        });
       },
     },
     {

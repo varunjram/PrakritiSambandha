@@ -1,16 +1,15 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import Login from "../pages/Login";
-import Landing from "../pages/Landing";
-import MockAPI from "./MockApi";
-import Signup from "../pages/Signup";
-import NotFound from "./NotFound";
-import Home from "../pages/Home";
-import Explore from "../pages/Explore";
+import { Route, Routes } from "react-router-dom";
 import Bookmarks from "../pages/Bookmarks";
+import Explore from "../pages/Explore";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
 import Profile from "../pages/Profile";
-import AuthWrapper from "./AuthWrapper";
+import Signup from "../pages/Signup";
 import SinglePost from "../pages/SinglePost";
+import AuthWrapper from "./AuthWrapper";
+import MockAPI from "./MockApi";
+import NotFound from "./NotFound";
 
 function Routing() {
   return (

@@ -11,11 +11,13 @@ function Login() {
   const { isLoggedIn, dispatch } = useAuthentication();
   const [form, setForm] = useState({ username: "", password: "" });
   const Location = useLocation();
+  console.log("Location: ", Location);
   const Navigate = useNavigate();
 
   const setFormField = (e, field) => setForm({ ...form, [field]: e.target.value });
 
   const updateUserLogIn = (payload) => dispatch({ type: USER_LOGGED_IN, payload: payload });
+  // isLoggedIn && Location?.state?.from.length > 5 ? Navigate(Location?.state?.from) : Navigate("/");
   isLoggedIn && Navigate("/");
   return (
     <div className="grid h-screen">
@@ -40,7 +42,10 @@ function Login() {
             onSubmit={async (e) => {
               e.preventDefault();
               const response = await handleLogIn(form, updateUserLogIn);
-              response === 200 ? Navigate(Location?.state?.from) : alert("error");
+              if (response === 200) {
+                Navigate(Location?.state?.from);
+              } else {
+              }
             }}>
             <label
               htmlFor="username"

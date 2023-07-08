@@ -86,7 +86,7 @@ export const posts = [
     content:
       "The true mind can weather all the lies and illusions without being lost. The true heart can touch the poison of hatred without being harmed. Since beginning less time, darkness thrives in the void, but always yields to purifying light",
     likes: {
-      likeCount: 1,
+      likeCount: 111,
       likedBy: [
         {
           _id: "501",
