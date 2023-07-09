@@ -21,17 +21,17 @@ function Login() {
   isLoggedIn && Navigate("/");
   return (
     <div className="grid h-screen">
-      <section className="col-6 p-0">
+      <section className="hidden lg:block lg:col-6 mr-0 p-0 ">
         <img
           src="https://cdn.pixabay.com/photo/2017/05/31/10/03/background-2359803_1280.jpg"
           alt="nature"
-          className="w-full h-full"
+          style={{ width: "100%", height: "calc(100% - 0.4px)" }}
         />
       </section>
-      <section className="col-6 p-0 flex align-items-center justify-content-center">
-        <div className="w-6 ">
+      <section className="col-12 lg:col-6 p-0 flex align-items-center justify-content-center">
+        <div className="lg:w-6">
           <img
-            src="https://www.clipartkey.com/mpngs/m/196-1969111_yoga-green-png.png"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMV-T-HVSB895Nekw4n-b5Zt4E4-4YON20WwBIDWiaY3IE5vf-YwQEiDBPEQOF35rF4pk&usqp=CAU"
             alt="hyper"
             height={100}
             className=""
