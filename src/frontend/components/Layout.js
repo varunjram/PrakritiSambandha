@@ -2,6 +2,7 @@ import React from "react";
 import LeftSideContent from "./LeftSideContent";
 import NavigationHeader from "./NavigationHeader";
 import RightSideContent from "./RightSideContent";
+import MobileFooter from "./MobileFooter";
 
 function Layout({ children }) {
   return (
@@ -14,6 +15,7 @@ function Layout({ children }) {
         <div className="p-3 flex-grow-1 border-1 w-6 md:p-5 ">{children}</div>
         <RightSideContent />
       </main>
+      <MobileFooter />
     </div>
   );
 }

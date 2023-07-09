@@ -1,14 +1,12 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Dropdown } from "primereact/dropdown";
-import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
-import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { UPDATE_FOLLOW_USER, UPDATE_SORTBY_METHOD } from "../reducers/AppReducer";
-import { postFollowHandler } from "../services";
 import { useAuthentication } from "../context/AuthContext";
+import { UPDATE_FOLLOW_USER, UPDATE_SORTBY_METHOD } from "../reducers/AppReducer";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
+import { postFollowHandler } from "../services";
 import SearchUsers from "./SearchUsers";
 
 function RightSideContent() {
@@ -54,7 +52,6 @@ function RightSideContent() {
       <article className="p-3 align-self-stretch">
         <div className="flex justify-content-between border-bottom-2">
           <p className="mb-1">Who to Follow?</p>
-          <p className="mb-1">Show More</p>
         </div>
         {usersToFollow?.map((user, index) => {
           const { _id, lastName, firstName, username, customInfo } = user;

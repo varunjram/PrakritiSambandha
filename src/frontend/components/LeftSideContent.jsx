@@ -39,7 +39,6 @@ function LeftSideContent() {
   return (
     <aside className="hidden md: border-1 md:flex flex-column justify-content-between md:w-auto lg:w-3 ">
       <Toast ref={toast} />
-
       <Dialog
         header="Create New Post"
         visible={visible}
