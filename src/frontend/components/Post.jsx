@@ -123,7 +123,7 @@ function Post({ post, toast }) {
       <Dialog
         header="Edit Post"
         visible={visible}
-        style={{ width: "50vw" }}
+        className="w-full md:w-10 lg:w-6"
         onHide={() => setVisible(false)}>
         <CreateEditPost
           toast={toast}
@@ -132,20 +132,20 @@ function Post({ post, toast }) {
         />
       </Dialog>
       <div
-        className="p-3 pr-0 cursor-pointer"
+        className="p-1 md:p-3 pr-0 cursor-pointer  "
         onClick={navigateToPerson}>
         <Avatar
           image={customInfo?.avatar}
           size="large"
           shape="circle"
-          className="ml-auto "
+          className="ml-auto"
         />
       </div>
-      <div className="flex-grow-1 p-3 ">
+      <div className="p-2 md:flex-grow-1 md:p-3 ">
         <div
-          className="flex align-items-center cursor-pointer"
+          className="mb-1 md:flex align-items-center cursor-pointer mb-3"
           onClick={navigateToPerson}>
-          <h4 className="mr-2">{`${firstName} ${lastName}`}</h4>
+          <h4 className="m-1 mr-2 ">{`${firstName} ${lastName}`}</h4>
           <span className="text-500">
             @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
           </span>

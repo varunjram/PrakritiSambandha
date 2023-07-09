@@ -37,7 +37,7 @@ function RightSideContent() {
     { label: "Trending", method: "TRENDING", icon: "fire" },
   ];
   return (
-    <aside className="w-3 border-1 flex flex-column align-items-center pt-5  ">
+    <aside className="hidden lg:w-3 border-1 lg:flex flex-column align-items-center pt-5">
       <SearchUsers />
       <div className="mt-2">
         {sortByMenus.map(({ method, label, icon }) => (

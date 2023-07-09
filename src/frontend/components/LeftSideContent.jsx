@@ -37,7 +37,7 @@ function LeftSideContent() {
     },
   ];
   return (
-    <aside className="w-3 border-1 flex flex-column  justify-content-between ">
+    <aside className="hidden md: border-1 md:flex flex-column justify-content-between md:w-auto lg:w-3 ">
       <Toast ref={toast} />
 
       <Dialog
@@ -50,12 +50,12 @@ function LeftSideContent() {
           toast={toast}
         />
       </Dialog>
-      <div className="mt-5">
+      <div className="mt-5 md:mx-2 lg:ml-0">
         <div className="flex flex-column ml-auto min-w-min">
           {sideMenu.map(({ icon, name, path }) => (
             <Link
               key={`${name}-${icon}`}
-              className="ml-7 mb-3 cursor-pointer"
+              className="lg:ml-7 mb-3 cursor-pointer"
               to={path}>
               <i className={`bi bi-${icon} mr-3`}></i>
               {name}
@@ -64,11 +64,11 @@ function LeftSideContent() {
         </div>
         <Button
           label="Create New Post"
-          className="block ml-7"
+          className="lg:ml-7"
           onClick={() => setVisible(true)}
         />
       </div>
-      <article className="flex fixed bottom-0 mb-3 w-3 p-3">
+      <article className="hidden lg:flex fixed bottom-0 mb-3 w-3 p-3    ">
         <Avatar
           image={customInfo?.avatar}
           size="small"

@@ -87,7 +87,7 @@ function ProfileContents() {
   useEffect(() => {
     (async () => {
       const userResponse = await getUser(userId);
-      console.log("userResponse: ", userResponse);
+
       setSelectedUser(userResponse);
     })();
   }, [userId]);
@@ -100,7 +100,7 @@ function ProfileContents() {
       <Dialog
         header="Edit Profile"
         visible={editProfile}
-        style={{ width: "50vw" }}
+        className="w-full md:w-10 lg:w-6"
         onHide={() => setEditProfile(false)}
         // footer={dialogFooterContent}
       >
@@ -110,11 +110,13 @@ function ProfileContents() {
               <div className="flex flex-wrap  grid">
                 {avatarOptionsForm?.map((avatarObj, i) => {
                   return (
-                    <div className="col-6">
+                    <div className="col-4 md:col-6 ">
                       <Avatar
                         image={avatarObj.img}
                         // className="w-7rem h-7rem"s
-                        className={`${i % 2 ? "ml-auto" : null} w-4rem h-4rem block`}
+                        className={`${
+                          i % 2 ? "md:ml-auto" : null
+                        } w-2rem h-2rem md:w-4rem md:h-4rem block`}
                       />
                       <div
                         key={avatarObj.key}
@@ -125,7 +127,7 @@ function ProfileContents() {
                           value={avatarObj}
                           onChange={(e) => setSelectedAvatar(e.value)}
                           checked={selectedAvatar?.key === avatarObj?.key}
-                          className={`${i % 2 ? "ml-auto" : null}`}
+                          className={`${i % 2 ? "md:ml-auto" : null}`}
                         />
                         <label
                           htmlFor={avatarObj.key}
@@ -139,9 +141,7 @@ function ProfileContents() {
               </div>
             </div>
           }
-          <div
-            style={{ marginLeft: "25%", marginRight: "25%" }}
-            className="absolute top-0 grid justify-content-center  align-items-center text-center ">
+          <div className="md:absolute top-0 grid justify-content-center align-items-center text-center m-auto">
             <div className="col-12">
               <Avatar
                 image={selectedAvatar?.img}
@@ -149,7 +149,7 @@ function ProfileContents() {
               />
             </div>
             {/* <p className="w-full flex-1">Selected Avatar</p> */}
-            <div className="flex flex-column gap-2 col-12">
+            <div className="flex flex-column gap-2 col-8">
               <label htmlFor="username">Bio</label>
               <InputTextarea
                 id="userBio"
@@ -159,40 +159,42 @@ function ProfileContents() {
                 onChange={handleEditFormChange}
               />
             </div>
-            <div className="flex flex-column gap-2 col-12">
+            <div className="flex flex-column gap-2 col-8">
               <label htmlFor="username">Portfoil URL</label>
               <InputText
                 value={editForm.userPortFolio}
                 id="userPortFolio"
-                className="w-22rem"
+                className=""
                 onChange={handleEditFormChange}
               />
             </div>
-            <Button
-              label="Update"
-              onClick={async () => {
-                const EditData = {
-                  customInfo: {
-                    ...customInfo,
-                    bio: editForm?.userBio,
-                    portfolioUrl: editForm?.userPortFolio,
-                    avatar: selectedAvatar.img,
-                  },
-                };
-                const { user, status } = await EditUser(authToken, EditData, UpdateAuthUser);
-                console.log("statusedit: ", status);
-                if (status === 201) {
-                  setSelectedUser(user);
-                  setEditProfile(false);
-                }
-              }}
-              className="col-3"
-            />
+            <div className="col-12">
+              <Button
+                label="Update"
+                onClick={async () => {
+                  const EditData = {
+                    customInfo: {
+                      ...customInfo,
+                      bio: editForm?.userBio,
+                      portfolioUrl: editForm?.userPortFolio,
+                      avatar: selectedAvatar.img,
+                    },
+                  };
+                  const { user, status } = await EditUser(authToken, EditData, UpdateAuthUser);
+
+                  if (status === 201) {
+                    setSelectedUser(user);
+                    setEditProfile(false);
+                  }
+                }}
+                className="col-3"
+              />
+            </div>
           </div>
           {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
-              
+
       {selectedUser && (
         <section className="user-details">
           <div className=" flex justify-content-center max-content-max ">
