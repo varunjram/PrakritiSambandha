@@ -36,6 +36,7 @@ export const posts = [
   {
     _id: "202",
     content: `Planting for Pollinators: Create a pollinator-friendly garden by including a variety of flowers, herbs, and shrubs that attract bees, butterflies, and other beneficial insects. Pollinators play a crucial role in plant reproduction and ecosystem health, so providing them with a diverse and pesticide-free habitat is essential.`,
+    image: "https://www.fix.com/assets/content/15638/friends-of-pollinator-garden.png",
     likes: {
       likeCount: 1,
       likedBy: [],

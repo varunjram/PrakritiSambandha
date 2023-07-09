@@ -11,6 +11,8 @@ import { UPDATE_BOOKMARKS } from "../reducers/AuthReducer";
 import { handleBookMark, handleLikeAndDislike, handlePostDelete } from "../services";
 import CreateEditPost from "./CreateEditPost";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
+import FullScreenLoader from "./FullScreenLoader";
 
 const findUser = (username, users) => {
   return users?.find((user) => user?.username === username) || {};
@@ -20,7 +22,7 @@ function Post({ post, toast }) {
   const { authToken, user, dispatch: authDispatch } = useAuthentication();
   const Navigate = useNavigate();
 
-  const { _id, content, username, createdAt, likes } = post || {};
+  const { _id, content, username, createdAt, likes, image } = post || {};
   const { likeCount = 0, likedBy = null } = likes || {};
   const postMenuRef = useRef();
   const [visible, setVisible] = useState(false);
@@ -119,74 +121,85 @@ function Post({ post, toast }) {
 
   const navigateToPerson = () => Navigate(`/profile/${username}/${userId}`);
   return (
-    <section className="flex surface-0 mb-4 relative text-left">
-      <Dialog
-        header="Edit Post"
-        visible={visible}
-        className="w-full md:w-10 lg:w-6"
-        onHide={() => setVisible(false)}>
-        <CreateEditPost
-          toast={toast}
-          editPost={post}
-          setEditDialogVisibility={setVisible}
-        />
-      </Dialog>
-      <div
-        className="p-1 md:p-3 pr-0 cursor-pointer  "
-        onClick={navigateToPerson}>
-        <Avatar
-          image={customInfo?.avatar}
-          size="large"
-          shape="circle"
-          className="ml-auto"
-        />
-      </div>
-      <div className="p-2 md:flex-grow-1 md:p-3 ">
+    <>
+      <section className="flex surface-0 mb-4 relative text-left">
+        <Dialog
+          header="Edit Post"
+          visible={visible}
+          className="w-full md:w-10 lg:w-6"
+          onHide={() => setVisible(false)}>
+          <CreateEditPost
+            toast={toast}
+            editPost={post}
+            setEditDialogVisibility={setVisible}
+          />
+        </Dialog>
         <div
-          className="mb-1 md:flex align-items-center cursor-pointer mb-3"
+          className="p-1 md:p-3 pr-0 cursor-pointer  "
           onClick={navigateToPerson}>
-          <h4 className="m-1 mr-2 ">{`${firstName} ${lastName}`}</h4>
-          <span className="text-500">
-            @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
-          </span>
+          <Avatar
+            image={customInfo?.avatar}
+            size="large"
+            shape="circle"
+            className="ml-auto"
+          />
         </div>
-        <div
-          className="white-space-pre-wrap cursor-pointer "
-          onClick={() => Navigate(`/post/${_id}`)}>
-          {content}
+        <div className="p-2 md:flex-grow-1 md:p-3 ">
+          <div
+            className="mb-1 md:flex align-items-center cursor-pointer mb-3"
+            onClick={navigateToPerson}>
+            <h4 className="m-1 mr-2 ">{`${firstName} ${lastName}`}</h4>
+            <span className="text-500">
+              @{username} &#8729; {moment(createdAt).format("MMMM Do YYYY, h:mm a")}
+            </span>
+          </div>
+          <div
+            className="white-space-pre-wrap cursor-pointer "
+            onClick={() => Navigate(`/post/${_id}`)}>
+            {content}
+          </div>
+          {image && (
+            <div className="w-full">
+              <img
+                src={image}
+                alt=""
+                className="w-full -full"
+              />
+            </div>
+          )}
+          <div className="flex justify-content-between mt-2 ">
+            {postButtons.map(({ icon, command, activeIcon }, index) => (
+              <Button
+                key={`${index}-${icon}`}
+                icon={`bi bi-${icon}`}
+                rounded
+                text
+                aria-label="Filter"
+                onClick={command}
+                badge={icon.includes("heart") && likeCount}
+                badgeClassName="absolute top-0 right-0 "
+              />
+            ))}
+          </div>
         </div>
-        <div className="flex justify-content-between mt-2 ">
-          {postButtons.map(({ icon, command, activeIcon }, index) => (
-            <Button
-              key={`${index}-${icon}`}
-              icon={`bi bi-${icon}`}
-              rounded
-              text
-              aria-label="Filter"
-              onClick={command}
-              badge={icon.includes("heart") && likeCount}
-              badgeClassName="absolute top-0 right-0 "
-            />
-          ))}
-        </div>
-      </div>
-      <Button
-        icon="bi bi-three-dots-vertical"
-        className="absolute top-0 right-0  "
-        rounded
-        text
-        onClick={(event) => postMenuRef.current.toggle(event)}
-        aria-controls="popup_menu_right"
-        disabled={isLoggedInUsersPost ? false : true}
-      />
-      <Menu
-        model={postMenu}
-        popup
-        ref={postMenuRef}
-        id="popup_menu_right"
-        popupAlignment="left"
-      />
-    </section>
+        <Button
+          icon="bi bi-three-dots-vertical"
+          className="absolute top-0 right-0  "
+          rounded
+          text
+          onClick={(event) => postMenuRef.current.toggle(event)}
+          aria-controls="popup_menu_right"
+          disabled={isLoggedInUsersPost ? false : true}
+        />
+        <Menu
+          model={postMenu}
+          popup
+          ref={postMenuRef}
+          id="popup_menu_right"
+          popupAlignment="left"
+        />
+      </section>
+    </>
   );
 }
 

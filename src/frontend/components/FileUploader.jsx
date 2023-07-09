@@ -1,14 +1,17 @@
 import { Button } from "primereact/button";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 
 const FileUploader = ({ setFiles, files }) => {
   const handleUpload = (event) => {
+
+    console.log("event: ", event);
     const uploadedFiles = Array.from(event.target.files);
+    console.log("uploadedFiles: ", { uploadedFiles, event });
     setFiles(uploadedFiles);
   };
   const fileInputRef = useRef(null);
   const handleButtonClick = () => {
-    fileInputRef.current.click(); // Trigger the click event on the hidden file input
+    fileInputRef.current.click();
   };
 
   return (

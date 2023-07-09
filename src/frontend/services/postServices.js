@@ -14,12 +14,23 @@ export const getAllPosts = async (addPosts) => {
   }
 };
 
-export const addPost = async (addPosts, postContent, authToken) => {
-  console.log("authToken: ", authToken);
+export const addPost = async (addPosts, postContent, authToken, files) => {
   try {
+    const preset = process.env.REACT_APP_CLOUDINARY_PRESET;
+    const cloud = process.env.REACT_APP_CLOUDINARY_NAME;
+    const imagedata = new FormData();
+    imagedata.append("file", files[0]);
+    imagedata.append("upload_preset", preset);
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, {
+      method: "POST",
+      body: imagedata,
+    });
+    const file = await res.json();
+
     const { data, status } = await axios.post(
       "/api/posts",
-      { postData: { content: postContent?.postTextBody, images: postContent?.files } },
+      { postData: { content: postContent?.postTextBody, image: file?.secure_url } },
       {
         headers: {
           authorization: authToken,
@@ -30,9 +41,8 @@ export const addPost = async (addPosts, postContent, authToken) => {
       addPosts("posts", data?.posts);
       return status;
     }
-    // console.log("updatedPost ", data);
   } catch (error) {
-    console.error("error: while adding user ", error);
+    console.error("error: while adding post ", error);
   }
 };
 
