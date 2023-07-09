@@ -36,7 +36,7 @@ function Login() {
             height={100}
             className=""
           />
-          <h2 className="text-left mb-0"> Welcome to Prakritisambandha</h2>
+          <h2 className="text-left mb-0"> Welcome to Prakriti</h2>
           <p className="text-left mt-0 text-gray-500">Please go ahead and login below.</p>
           <form
             onSubmit={async (e) => {

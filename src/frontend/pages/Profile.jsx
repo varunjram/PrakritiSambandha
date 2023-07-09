@@ -4,6 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { RadioButton } from "primereact/radiobutton";
+import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
@@ -14,9 +15,8 @@ import { useAuthentication } from "../context/AuthContext";
 import { postFilterBy } from "../helperFunctions/index.js";
 import { UPDATE_APP_STATE, UPDATE_FOLLOW_USER } from "../reducers/AppReducer";
 import { UPDATE_AUTH_STATE } from "../reducers/AuthReducer";
-import { EditUser, getAllUserPosts, getUser } from "../services";
+import { EditUser, getAllUserPosts, getAllUsers, getUser } from "../services";
 import { postFollowHandler } from "../services/postServices";
-import { Toast } from "primereact/toast";
 
 function ProfileContents() {
   const { sortBy, userPosts, dispatch, avatarOptions, posts } = useAppContext();
@@ -27,6 +27,7 @@ function ProfileContents() {
   } = useAuthentication();
   const { userName, userId } = useParams();
   const [selectedUser, setSelectedUser] = useState();
+  const [updateUsers, setUpdateUsers] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
   const [editForm, setEditForm] = useState({
     userTags: [],
@@ -92,8 +93,13 @@ function ProfileContents() {
     })();
   }, [userId]);
 
-  // const ProfileEditForm = () => {};
-
+  useEffect(() => {
+    if (updateUsers) {
+      const updateAppState = (key, value) =>
+        dispatch({ type: UPDATE_APP_STATE, payload: { key: key, value: value } });
+      getAllUsers(updateAppState);
+    }
+  }, [updateUsers]);
   return (
     <div className="text-center">
       <Toast ref={toast} />
@@ -101,9 +107,7 @@ function ProfileContents() {
         header="Edit Profile"
         visible={editProfile}
         className="w-full md:w-10 lg:w-6"
-        onHide={() => setEditProfile(false)}
-        // footer={dialogFooterContent}
-      >
+        onHide={() => setEditProfile(false)}>
         <div className="relative">
           {
             <div className="card flex justify-content-center relative">
@@ -141,14 +145,15 @@ function ProfileContents() {
               </div>
             </div>
           }
-          <div className="md:absolute top-0 grid justify-content-center align-items-center text-center m-auto">
+          <div
+            className="md:absolute top-0  grid justify-content-center align-items-center text-center m-auto w-9 ml-12rem"
+            style={{ left: "13%" }}>
             <div className="col-12">
               <Avatar
                 image={selectedAvatar?.img}
                 className="w-7rem h-7rem flex-1"
               />
             </div>
-            {/* <p className="w-full flex-1">Selected Avatar</p> */}
             <div className="flex flex-column gap-2 col-8">
               <label htmlFor="username">Bio</label>
               <InputTextarea
@@ -185,13 +190,13 @@ function ProfileContents() {
                   if (status === 201) {
                     setSelectedUser(user);
                     setEditProfile(false);
+                    setUpdateUsers(true);
                   }
                 }}
                 className="col-3"
               />
             </div>
           </div>
-          {/* <pre>{JSON.stringify(selectedUser, null, 2)}</pre> */}
         </div>
       </Dialog>
 
@@ -248,7 +253,7 @@ function ProfileContents() {
           <p className="text-primary">{customInfo?.bio}</p>
           <Link
             className="text-red-500"
-            to={"https://www.factretriever.com/"}
+            to={customInfo?.portfolioUrl}
             target="_blank">
             {customInfo?.portfolioUrl}
           </Link>

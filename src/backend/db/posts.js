@@ -61,6 +61,8 @@ export const posts = [
   {
     _id: "103",
     content: `Composting: Start a compost pile or bin to recycle kitchen scraps, yard waste, and plant debris. Compost is a nutrient-rich soil amendment that improves soil structure, fertility, and overall plant health. It's an excellent way to reduce waste and create your own sustainable source of organic matter`,
+    image:
+      "https://ehq-production-us-california.imgix.net/7105554270d58eeab343771bb9a93ef3e32d2622/original/1658252679/8485e51e5fa131bf934f0cbc4eec4d81_AdobeStock_432647125.jpeg?auto=compress%2Cformat&w=1080",
     likes: {
       likeCount: 0,
       likedBy: [],
@@ -86,6 +88,7 @@ export const posts = [
     _id: "105",
     content:
       "The true mind can weather all the lies and illusions without being lost. The true heart can touch the poison of hatred without being harmed. Since beginning less time, darkness thrives in the void, but always yields to purifying light",
+    image: "https://everydaypower.com/wp-content/uploads/2022/11/The-Last-Airbender-Quotes-19.jpg",
     likes: {
       likeCount: 111,
       likedBy: [
@@ -131,6 +134,8 @@ export const posts = [
     content: `Now comes the most exciting part of the gardening process - picking your greens. Before you rush to a conclusion on what to grow in your garden, take some time to study the plants.
 
     Some plants like direct sunlight while others prefer shade. You can check your plant seed package for this information. Picking the plants that are native to your area can make your life very easy, especially when you are about to become a plant parent.`,
+    image:
+      "https://www.bhg.com/thmb/lNssaNS9Ho1MgufnXvzSmuWramo=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/10-must-grow-plants-5661161-6074672b3ed3470f8b6dcf4cb76e6aea.jpg",
     likes: {
       likeCount: 0,
       likedBy: [],
@@ -143,6 +148,7 @@ export const posts = [
   {
     _id: "109",
     content: `Citrus plants are native to tropical and subtropical regions of southern Asia, Australia, and the South Pacific, but have been brought to all corners of the globe thanks to human cultivation. These woody plants range in size from small shrubs to large trees, and their fruit is just as variable in size and shape—just take a walk down the fruit aisle at your local supermarket! Standard-size grapefruit and orange trees can grow 18 to 22 feet tall, whereas dwarf citrus varieties only grow 8 to 12 feet tall (or smaller, if kept in containers).`,
+    image: "https://i.pinimg.com/originals/8a/b2/44/8ab2441faea54d867a8c7e5f8d158684.jpg",
     likes: {
       likeCount: 0,
       likedBy: [],
