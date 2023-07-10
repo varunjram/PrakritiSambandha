@@ -10,6 +10,8 @@ import { addPost, handlePostEdit } from "../services";
 import emojis from "../utils/emoji";
 import FileUploader from "./FileUploader";
 import axios from "axios";
+import { Chip } from "primereact/chip";
+
 import FullScreenLoader from "./FullScreenLoader";
 // import FileUploader2 from "./FileUploader2";
 
@@ -21,6 +23,7 @@ function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisib
   const [loading, setLoading] = useState(false);
   const emojiRef = useRef(null);
   console.log("files: ", files);
+  console.log("files: ", files);
 
   const uploadButtons = [
     // {
@@ -29,27 +32,12 @@ function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisib
     //     alert("a");
     //   },
     // },
-    {
-      icon: "filetype-gif",
-      command: async () => {
-        const preset = process.env.REACT_APP_CLOUDINARY_PRESET;
-        const cloud = process.env.REACT_APP_CLOUDINARY_NAME;
-        const data = new FormData();
-        data.append("file", files[0]);
-        data.append("upload_preset", preset);
-        console.log("data: ", JSON.stringify(data, null, 2));
-        try {
-          const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, {
-            method: "POST",
-            body: data,
-          });
-          const file = await res.json();
-          console.log("file.secure_url: ", file.secure_url);
-        } catch (error) {
-          console.log("error:imageupload ", error);
-        }
-      },
-    },
+    // {
+    //   icon: "filetype-gif",
+    //   command: async () => {
+
+    //   },
+    // },
     {
       icon: "emoji-wink",
       command: () => {
@@ -159,6 +147,7 @@ function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisib
                       summary: "Post Created",
                     });
                     setPostTextBody("");
+                    setFiles([]);
                     setVisible && setVisible(false);
                   } else {
                     setLoading(false);
@@ -168,13 +157,15 @@ function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisib
                     authToken,
                     postTextBody,
                     _id,
-                    updateAppState
+                    updateAppState,
+                    files
                   );
                   if (status === 201) {
                     toast.current.show({
                       severity: "success",
                       summary: "Successfully edited Post",
                     });
+                    setFiles([]);
                     setEditDialogVisibility(false);
                   } else {
                     toast.current.show({
@@ -186,6 +177,12 @@ function CreateEditPost({ setVisible, toast, editPost = null, setEditDialogVisib
               }}
             />
           </div>
+          {files.length > 0 && (
+            <Chip
+              label={files[0]?.name}
+              image={URL.createObjectURL(files[0])}
+            />
+          )}
         </div>
       </section>
     </>

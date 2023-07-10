@@ -67,12 +67,24 @@ export const handleLikeAndDislike = async (type, authToken, postId, addPosts) =>
   }
 };
 
-export const handlePostEdit = async (authToken, contentToUpdate, postId, addPosts) => {
+export const handlePostEdit = async (authToken, contentToUpdate, postId, addPosts, files) => {
   try {
+    const preset = process.env.REACT_APP_CLOUDINARY_PRESET;
+    const cloud = process.env.REACT_APP_CLOUDINARY_NAME;
+    const imagedata = new FormData();
+    imagedata.append("file", files[0]);
+    imagedata.append("upload_preset", preset);
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, {
+      method: "POST",
+      body: imagedata,
+    });
+    const file = await res.json();
+
     const { data, status } = await axios.post(
       `/api/posts/edit/${postId}`,
       {
-        postData: { content: contentToUpdate },
+        postData: { content: contentToUpdate, image: file?.secure_url },
       },
       {
         headers: {

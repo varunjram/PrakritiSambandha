@@ -154,7 +154,7 @@ function Post({ post, toast }) {
             </span>
           </div>
           <div
-            className="white-space-pre-wrap cursor-pointer "
+            className="white-space-pre-wrap cursor-pointer md:text-lg "
             onClick={() => Navigate(`/post/${_id}`)}>
             {content}
           </div>

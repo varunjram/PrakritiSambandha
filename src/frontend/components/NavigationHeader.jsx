@@ -13,7 +13,7 @@ const NavigationHeader = () => {
       className="flex justify-content-between sticky top-0  z-5 text-white     "
       style={{ backgroundColor: "#483C32" }}>
       <h2 className="ml-2 m-2 md:ml-6 ">Prakriti</h2>
-      <span className="md:hidden w-6 m-auto">
+      <span className="md:hidden w-5 m-auto">
         <SearchUsers />
       </span>
       <div>

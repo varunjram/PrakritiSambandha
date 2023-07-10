@@ -59,7 +59,7 @@ function Login() {
               onChange={(e) => setFormField(e, "username")}
               placeholder="Username"
               className="w-full mb-3"
-              required
+
             />
 
             <div className="">
@@ -88,7 +88,7 @@ function Login() {
               className="w-full mt-5"
             />
             <Button
-              type="submit"
+              // type="submit"  
               label="Guest Sign In"
               icon="pi pi-user"
               className="w-full mt-1 p-button-secondary"

@@ -54,7 +54,7 @@ function LeftSideContent() {
           {sideMenu.map(({ icon, name, path }) => (
             <Link
               key={`${name}-${icon}`}
-              className="lg:ml-7 mb-3 cursor-pointer"
+              className="lg:ml-7 mb-3 cursor-pointer text-xl"
               to={path}>
               <i className={`bi bi-${icon} mr-3`}></i>
               {name}
