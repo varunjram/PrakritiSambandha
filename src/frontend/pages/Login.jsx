@@ -72,6 +72,7 @@ function Login() {
               <Password
                 id="password"
                 name="password"
+                placeholder="Password"
                 value={form.password}
                 onChange={(e) => setFormField(e, "password")}
                 toggleMask
@@ -88,7 +89,7 @@ function Login() {
               className="w-full mt-5"
             />
             <Button
-              // type="submit"  
+              // type="submit"
               label="Guest Sign In"
               icon="pi pi-user"
               className="w-full mt-1 p-button-secondary"

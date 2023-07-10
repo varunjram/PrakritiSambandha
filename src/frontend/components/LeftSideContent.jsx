@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Toast } from "primereact/toast";
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthentication } from "../context/AuthContext";
 import CreatePost from "./CreateEditPost";
 
@@ -12,6 +12,8 @@ function LeftSideContent() {
   console.log("user: ", user);
   const [visible, setVisible] = useState(false);
   const toast = useRef(null);
+
+  const Navigate = useNavigate();
 
   const { firstName, lastName, customInfo, username } = user || {};
   const sideMenu = [
@@ -67,7 +69,9 @@ function LeftSideContent() {
           onClick={() => setVisible(true)}
         />
       </div>
-      <article className="hidden lg:flex fixed bottom-0 mb-3 w-3 p-3    ">
+      <article
+        className="hidden lg:flex fixed bottom-0 mb-3 w-3 p-3 cursor-pointer"
+        onClick={() => Navigate(`/profile/${user?.username}/${user?._id}`)}>
         <Avatar
           image={customInfo?.avatar}
           size="small"
